@@ -20,7 +20,7 @@ module.exports.select = function(app, req, res){
 }
 
 module.exports.insert = function(app, req, res){
-    let Category = app.models.category;
+    let Category = app.server.models.category;
     let category = new Category(req.body);
     app.server.models.user.findById(req.body.userId, function(err, user){
         if(err) res.status(400).json(err);
@@ -55,7 +55,7 @@ module.exports.delete = function(app, req, res){
     app.server.models.user.findById(req.body.userId, function(err, user){
         if(err) res.status(400).json(err);
         if(user && user.permissions.isAdmin){
-            app.models.category.findByIdAndRemove(req.body._id, function(err){
+            app.server.models.category.findByIdAndRemove(req.body._id, function(err){
                 if(err) res.status(400).json(err);
                 res.json({'category': 'successfully removed'});
             });

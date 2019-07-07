@@ -24,6 +24,11 @@ module.exports = {
         href:
           'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'
       }
+    ],
+    script: [
+      {
+        src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'
+      }
     ]
   },
   /*
@@ -37,7 +42,7 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ['~/plugins/vue-cookie'],
   /*
    ** Nuxt.js modules
    */

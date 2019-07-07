@@ -9,33 +9,26 @@
     >
       <v-list>
         <v-list-tile
-          v-for="(item, i) in items"
+          v-for="(category, i) in categories"
           :key="i"
-          :to="item.to"
+          :to="category.route"
           router
-          exact
         >
           <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon>{{ category.icon }}</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title v-text="item.title" />
+            <v-list-tile-title v-text="ucFirst(category.name)" />
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar :clipped-left="clipped" fixed app>
       <v-toolbar-side-icon @click="drawer = !drawer" />
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
+      <v-btn v-show="drawer" icon @click.stop="miniVariant = !miniVariant">
         <v-icon>{{ `chevron_${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
-      <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>web</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="fixed = !fixed">
-        <v-icon>remove</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title v-text="blogName" />
       <v-spacer />
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>menu</v-icon>
@@ -59,7 +52,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer :fixed="fixed" app>
-      <span>&copy; 2019</span>
+      <span>&copy; {{ new Date().getFullYear() }} - {{ blogName }} </span>
     </v-footer>
   </v-app>
 </template>
@@ -68,25 +61,44 @@
 export default {
   data() {
     return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
-      items: [
-        {
-          icon: 'apps',
-          title: 'Welcome',
-          to: '/'
-        },
-        {
-          icon: 'bubble_chart',
-          title: 'Inspire',
-          to: '/inspire'
-        }
-      ],
+      clipped: true,
+      drawer: true,
+      fixed: true,
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      blogName: this.$store.state.blogName
+    }
+  },
+  computed: {
+    categories() {
+      return this.$store.state.categories
+    }
+  },
+  created() {
+    this.$store.dispatch('loadLinks')
+    if (process.client) {
+      const cookie = this.$cookie.get('tkUser')
+      if (!cookie) {
+        this.$store.dispatch('login', {
+          userName: 'admin',
+          password: 'admin',
+          cookie: this.$cookie
+        })
+      } else {
+        this.$store.dispatch('login', { token: cookie })
+      }
+    }
+  },
+  methods: {
+    ucFirst(word) {
+      return word.charAt(0).toUpperCase() + word.slice(1)
+    }
+  },
+  head() {
+    return {
+      titleTemplate: this.blogName,
+      meta: [{ huehue: 'sadads' }]
     }
   }
 }

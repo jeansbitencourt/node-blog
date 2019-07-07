@@ -22,7 +22,7 @@ module.exports.select = function(app, req, res){
 module.exports.insert = function(app, req, res){
     let Post = app.models.post;
     let post = new Post(req.body);
-    app.models.user.findById(req.body.userId, function(err, user){
+    app.server.models.user.findById(req.body.userId, function(err, user){
         if(err) res.status(400).json(err);
         if(user && (user.permissions.isAdmin || user.permissions.createPosts)){
             post.save(function(err, newPost){
@@ -41,7 +41,7 @@ module.exports.update = function(app, req, res){
         if(err) res.status(400).json(err);
         if(user && (user.permissions.isAdmin || user.permissions.createPosts)){
             let newPost = req.body;
-            app.models.post.findOneAndUpdate({ _id: req.body._id}, newPost, { new: true }, function(err, postUpdate) {
+            app.server.models.post.findOneAndUpdate({ _id: req.body._id}, newPost, { new: true }, function(err, postUpdate) {
                 if(err) res.status(400).json(err);
                 res.json(postUpdate);
             });
@@ -55,7 +55,7 @@ module.exports.delete = function(app, req, res){
     app.server.models.user.findById(req.body.userId, function(err, user){
         if(err) res.status(400).json(err);
         if(user && (user.permissions.isAdmin || user.permissions.createPosts)){
-            app.models.post.findByIdAndRemove(req.params.id, function(err){
+            app.server.models.post.findByIdAndRemove(req.params.id, function(err){
                 if(err) res.status(400).json(err);
                 res.json({'post': 'successfully removed'});
             });

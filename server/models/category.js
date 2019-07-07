@@ -5,11 +5,14 @@ let Category = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true 
+        unique: true
     },
     description: {
         type: String,
         required: true
+    },
+    icon: {
+        type: String
     },
     creationDate: {
         type: Date,

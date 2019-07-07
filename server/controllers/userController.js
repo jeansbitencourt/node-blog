@@ -23,7 +23,7 @@ module.exports.select = function(app, req, res){
 }
 
 module.exports.insert = function(app, req, res){
-    let User = app.models.user;
+    let User = app.server.models.user;
     let user = new User(req.body);
     app.server.models.user.count({}, function(err, count){
         if(err) res.status(400).json(err);
@@ -32,6 +32,11 @@ module.exports.insert = function(app, req, res){
             user.permissions.createPosts = true;
             user.permissions.moderateComments = true;
             user.permissions.banUsers = true;
+        }else{
+            user.permissions.isAdmin = false;
+            user.permissions.createPosts = false;
+            user.moderateComments = false;
+            user.banUsers = false;
         }
         bcrypt.hash(req.body.password, salts, function(err, hash) {
             if(err){
@@ -58,7 +63,7 @@ module.exports.update = function(app, req, res){
                     res.status(400).json(err);
                 }else{
                     newUser.password = hash;
-                    app.models.user.findOneAndUpdate({ _id: req.body._id}, newUser, { new: true }, function(err, userUpdate) {
+                    app.server.models.user.findOneAndUpdate({ _id: req.body._id}, newUser, { new: true }, function(err, userUpdate) {
                             if(err) res.status(400).json(err);
                             res.json(userUpdate);
                     });
@@ -74,7 +79,7 @@ module.exports.delete = function(app, req, res){
     app.server.models.user.findById(req.body.userId, function(err, user){
         if(err) res.status(400).json(err);
         if(user && (user._id == req.params.id || user.permissions.isAdmin)){
-            app.models.user.findByIdAndRemove(req.params.id, function(err) {
+            app.server.models.user.findByIdAndRemove(req.params.id, function(err) {
                 if(err) res.status(400).json(err);
                 res.json({'user': 'successfully removed'});
             });
@@ -101,7 +106,7 @@ module.exports.login = function(app, req, res){
                             user.save(function(err){
                                 if(err) console.log(err);
                             });
-                            app.utils.auth.getNewAuth(user, res);
+                            app.server.utils.auth.getNewAuth(user, res);
                         }else{
                             res.status(401).send({ auth: false, message: 'Authentication failed. Incorrect password!' });
                         }

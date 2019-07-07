@@ -34,7 +34,7 @@ module.exports.selectData = function(app, req, res){
 }
 
 module.exports.insert = function(app, req, res){
-    let Image = app.models.image;
+    let Image = app.server.models.image;
     let image = new Image();
     app.server.models.user.findById(req.body.userId, function(err, user){
         if(err) res.status(400).json(err);
@@ -65,7 +65,7 @@ module.exports.update = function(app, req, res){
         if(err) res.status(400).json(err);
         if(user && (user.permissions.isAdmin || user.permissions.createPosts)){
             let newImage = req.body;
-            app.models.image.findOneAndUpdate({ _id: req.body._id}, newImage, { new: true }, function(err, imageUpdate) {
+            app.server.models.image.findOneAndUpdate({ _id: req.body._id}, newImage, { new: true }, function(err, imageUpdate) {
                 if(err) res.status(400).json(err);
                 res.json(imageUpdate);
             });
@@ -79,7 +79,7 @@ module.exports.delete = function(app, req, res){
     app.server.models.user.findById(req.body.userId, function(err, user){
         if(err) res.status(400).json(err);
         if(user && (user.permissions.isAdmin || user.permissions.createPosts)){
-            app.models.image.findByIdAndRemove(req.params.id, function(err){
+            app.server.models.image.findByIdAndRemove(req.params.id, function(err){
                 if(err) res.status(400).json(err);
                 res.json({'category': 'successfully removed'});
             });
