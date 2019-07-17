@@ -28,7 +28,9 @@
       <v-btn v-show="drawer" icon @click.stop="miniVariant = !miniVariant">
         <v-icon>{{ `chevron_${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
-      <v-toolbar-title v-text="blogName" />
+      <v-toolbar-title
+        v-text="blogName + (user.name ? ' - Olá ' + user.name.firstName : '')"
+      />
       <v-spacer />
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>menu</v-icon>
@@ -52,7 +54,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer :fixed="fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }} - {{ blogName }} </span>
+      <span>&copy; {{ new Date().getFullYear() }} - {{ blogName }}</span>
     </v-footer>
   </v-app>
 </template>
@@ -73,21 +75,25 @@ export default {
   computed: {
     categories() {
       return this.$store.state.categories
+    },
+    user() {
+      return this.$store.state.userData
     }
   },
   created() {
     this.$store.dispatch('loadLinks')
-    if (process.client) {
-      const cookie = this.$cookie.get('tkUser')
-      if (!cookie) {
-        this.$store.dispatch('login', {
-          userName: 'admin',
-          password: 'admin',
-          cookie: this.$cookie
-        })
-      } else {
-        this.$store.dispatch('login', { token: cookie })
-      }
+  },
+  mounted() {
+    const cookieTk = this.$cookie.get('tkUser')
+    const cookieUser = this.$cookie.get('dtUser')
+    if (cookieTk && cookieUser) {
+      this.$store.dispatch('login', { token: cookieTk, user: cookieUser })
+    } else {
+      this.$store.dispatch('login', {
+        userName: 'admin',
+        password: 'admin',
+        cookie: this.$cookie
+      })
     }
   },
   methods: {

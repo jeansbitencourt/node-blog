@@ -1,28 +1,31 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-let Category = new Schema({
+const Category = new Schema(
+  {
     name: {
-        type: String,
-        required: true,
-        unique: true
+      type: String,
+      required: true,
+      unique: true
     },
     description: {
-        type: String,
-        required: true
+      type: String,
+      required: true
     },
     icon: {
-        type: String
+      type: String
     },
     creationDate: {
-        type: Date,
-        max: Date.now,
-        default: Date.now
+      type: Date,
+      max: Date.now,
+      default: Date.now
     }
-},{
+  },
+  {
     collection: 'categories'
-});
+  }
+)
 
-module.exports = function(){
-    return mongoose.model('Category', Category);
+module.exports = function() {
+  return mongoose.model('Category', Category)
 }

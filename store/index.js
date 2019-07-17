@@ -2,7 +2,8 @@ import axios from 'axios'
 export const state = () => ({
   blogName: 'Jean Bitencourt',
   categories: [],
-  userToken: ''
+  userToken: '',
+  userData: {}
 })
 
 export const actions = {
@@ -12,7 +13,7 @@ export const actions = {
     })
   },
   login({ commit }, payload) {
-    if (payload.userName) {
+    if (!payload.token) {
       axios
         .post('/api/auth', {
           userName: payload.userName,
@@ -20,6 +21,7 @@ export const actions = {
         })
         .then((response) => {
           payload.token = response.data.token
+          payload.user = JSON.stringify(response.data.user)
           commit('setUserToken', payload)
         })
     } else {
@@ -45,8 +47,12 @@ export const mutations = {
   },
   setUserToken(state, data) {
     state.userToken = data.token
+    state.userData = JSON.parse(data.user)
     if (data.cookie) {
       data.cookie.set('tkUser', data.token, 1)
+      if (data.user) {
+        data.cookie.set('dtUser', data.user, 1)
+      }
     }
   }
 }

@@ -1,27 +1,30 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-let Image = new Schema({
+const Image = new Schema(
+  {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true
     },
     data: {
-        type: Buffer,
-        required: true  
+      type: Buffer,
+      required: true
     },
     contentType: {
-        type: String,
-        required: true
+      type: String,
+      required: true
     },
     uploadDate: {
-        type: Date,
-        default: Date.now
+      type: Date,
+      default: Date.now
     }
-},{
+  },
+  {
     collection: 'images'
-});
+  }
+)
 
-module.exports = function(){
-    return mongoose.model('Image', Image);
+module.exports = function() {
+  return mongoose.model('Image', Image)
 }
