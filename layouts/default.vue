@@ -32,7 +32,21 @@
         v-text="blogName + (user.name ? ' - Olá ' + user.name.firstName : '')"
       />
       <v-spacer />
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
+      <v-toolbar-title>
+        <v-text-field
+          v-model="search"
+          append-icon="search"
+          label="Buscar"
+          single-line
+          hide-details
+          style="margin-bottom: 0.8em"
+        />
+      </v-toolbar-title>
+      <v-btn
+        icon
+        style="margin-left:3em"
+        @click.stop="rightDrawer = !rightDrawer"
+      >
         <v-icon>menu</v-icon>
       </v-btn>
     </v-toolbar>
@@ -41,17 +55,20 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-      <v-list>
-        <v-list-tile @click.native="right = !right">
-          <v-list-tile-action>
-            <v-icon light>
-              compare_arrows
-            </v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
+    <v-navigation-drawer v-model="rightDrawer" :right="true" temporary fixed>
+      <v-card v-if="!user.name">
+        <v-card-title>
+          <v-chip>Fazer login</v-chip>
+          <v-text-field v-model="username" label="Usuário" />
+          <v-text-field v-model="password" :type="'password'" label="Senha" />
+        </v-card-title>
+        <v-card-actions>
+          <v-btn flat color="primary" @click="login">Entrar</v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-alert v-model="loginError" dismissible type="error">
+        Erro ao realizar login! Verifique seu usuário e senha...
+      </v-alert>
     </v-navigation-drawer>
     <v-footer :fixed="fixed" app>
       <span>&copy; {{ new Date().getFullYear() }} - {{ blogName }}</span>
@@ -67,9 +84,11 @@ export default {
       drawer: true,
       fixed: true,
       miniVariant: false,
-      right: true,
       rightDrawer: false,
-      blogName: this.$store.state.blogName
+      blogName: this.$store.state.blogName,
+      search: '',
+      username: '',
+      password: ''
     }
   },
   computed: {
@@ -78,6 +97,14 @@ export default {
     },
     user() {
       return this.$store.state.userData
+    },
+    loginError: {
+      get() {
+        return this.$store.state.loginError
+      },
+      set(value) {
+        this.$store.commit('setLoginError', value)
+      }
     }
   },
   created() {
@@ -88,17 +115,18 @@ export default {
     const cookieUser = this.$cookie.get('dtUser')
     if (cookieTk && cookieUser) {
       this.$store.dispatch('login', { token: cookieTk, user: cookieUser })
-    } else {
-      this.$store.dispatch('login', {
-        userName: 'admin',
-        password: 'admin',
-        cookie: this.$cookie
-      })
     }
   },
   methods: {
     ucFirst(word) {
       return word.charAt(0).toUpperCase() + word.slice(1)
+    },
+    login() {
+      this.$store.dispatch('login', {
+        userName: this.username,
+        password: this.password,
+        cookie: this.$cookie
+      })
     }
   },
   head() {

@@ -3,7 +3,8 @@ export const state = () => ({
   blogName: 'Jean Bitencourt',
   categories: [],
   userToken: '',
-  userData: {}
+  userData: {},
+  loginError: null
 })
 
 export const actions = {
@@ -23,6 +24,9 @@ export const actions = {
           payload.token = response.data.token
           payload.user = JSON.stringify(response.data.user)
           commit('setUserToken', payload)
+        })
+        .catch((err) => {
+          commit('setLoginError', err)
         })
     } else {
       commit('setUserToken', payload)
@@ -54,5 +58,9 @@ export const mutations = {
         data.cookie.set('dtUser', data.user, 1)
       }
     }
+    state.loginError = null
+  },
+  setLoginError(state, err) {
+    state.loginError = err
   }
 }
