@@ -1,6 +1,6 @@
 import axios from 'axios'
 export const state = () => ({
-  blogName: 'Jean Bitencourt',
+  blogName: process.env.BLOG_NAME,
   categories: [],
   userToken: '',
   userData: {},
@@ -31,6 +31,9 @@ export const actions = {
     } else {
       commit('setUserToken', payload)
     }
+  },
+  logout({ commit }, payload) {
+    commit('removeUserToken', payload)
   }
 }
 
@@ -62,5 +65,11 @@ export const mutations = {
   },
   setLoginError(state, err) {
     state.loginError = err
+  },
+  removeUserToken(state, data) {
+    state.userToken = ''
+    state.userData = {}
+    data.cookie.delete('tkUser')
+    data.cookie.delete('dtUser')
   }
 }

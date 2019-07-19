@@ -55,21 +55,11 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-navigation-drawer v-model="rightDrawer" :right="true" temporary fixed>
-      <v-card v-if="!user.name">
-        <v-card-title>
-          <v-chip>Fazer login</v-chip>
-          <v-text-field v-model="username" label="Usuário" />
-          <v-text-field v-model="password" :type="'password'" label="Senha" />
-        </v-card-title>
-        <v-card-actions>
-          <v-btn flat color="primary" @click="login">Entrar</v-btn>
-        </v-card-actions>
-      </v-card>
-      <v-alert v-model="loginError" dismissible type="error">
-        Erro ao realizar login! Verifique seu usuário e senha...
-      </v-alert>
-    </v-navigation-drawer>
+    <RightBar
+      :rightDrawer="rightDrawer"
+      :user="user"
+      @chanceRightDrawer="rightDrawer = $event"
+    />
     <v-footer :fixed="fixed" app>
       <span>&copy; {{ new Date().getFullYear() }} - {{ blogName }}</span>
     </v-footer>
@@ -77,7 +67,11 @@
 </template>
 
 <script>
+import RightBar from '~/components/RightBar.vue'
 export default {
+  components: {
+    RightBar
+  },
   data() {
     return {
       clipped: true,
@@ -86,9 +80,7 @@ export default {
       miniVariant: false,
       rightDrawer: false,
       blogName: this.$store.state.blogName,
-      search: '',
-      username: '',
-      password: ''
+      search: ''
     }
   },
   computed: {
@@ -97,14 +89,6 @@ export default {
     },
     user() {
       return this.$store.state.userData
-    },
-    loginError: {
-      get() {
-        return this.$store.state.loginError
-      },
-      set(value) {
-        this.$store.commit('setLoginError', value)
-      }
     }
   },
   created() {
@@ -120,13 +104,6 @@ export default {
   methods: {
     ucFirst(word) {
       return word.charAt(0).toUpperCase() + word.slice(1)
-    },
-    login() {
-      this.$store.dispatch('login', {
-        userName: this.username,
-        password: this.password,
-        cookie: this.$cookie
-      })
     }
   },
   head() {
