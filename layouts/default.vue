@@ -85,20 +85,20 @@ export default {
   },
   computed: {
     categories() {
-      return this.$store.state.categories
+      return this.$store.state.category.categories
     },
     user() {
-      return this.$store.state.userData
+      return this.$store.state.login.userData
     }
   },
   created() {
-    this.$store.dispatch('loadLinks')
+    this.$store.dispatch('category/loadLinks')
   },
   mounted() {
     const cookieTk = this.$cookie.get('tkUser')
     const cookieUser = this.$cookie.get('dtUser')
     if (cookieTk && cookieUser) {
-      this.$store.dispatch('login', { token: cookieTk, user: cookieUser })
+      this.$store.dispatch('login/login', { token: cookieTk, user: cookieUser })
     }
   },
   methods: {

@@ -3,8 +3,18 @@
     <v-card v-if="!user.name">
       <v-card-title>
         <v-chip>Fazer login</v-chip>
-        <v-text-field v-model="username" label="Usuário" />
-        <v-text-field v-model="password" :type="'password'" label="Senha" />
+        <v-text-field
+          v-model="username"
+          label="Usuário"
+          @keyup.enter="requestFocus"
+        />
+        <v-text-field
+          v-model="password"
+          :type="'password'"
+          label="Senha"
+          ref="password"
+          @keyup.enter="login"
+        />
       </v-card-title>
       <v-card-actions>
         <v-btn flat color="primary" @click="login">Entrar</v-btn>
@@ -26,10 +36,14 @@
 
 <script>
 export default {
+  data() {
+    return {
+      username: '',
+      password: ''
+    }
+  },
   props: {
     user: {},
-    username: String,
-    password: String,
     rightDrawer: Boolean
   },
   computed: {
@@ -46,25 +60,28 @@ export default {
         return this.$store.state.loginError
       },
       set(value) {
-        this.$store.commit('setLoginError', value)
+        this.$store.commit('login/setLoginError', value)
       }
     }
   },
   methods: {
     login() {
-      this.$store.dispatch('login', {
+      this.$store.dispatch('login/login', {
         userName: this.username,
         password: this.password,
         cookie: this.$cookie
       })
     },
     logout() {
-      this.$store.dispatch('logout', {
+      this.$store.dispatch('login/logout', {
         cookie: this.$cookie
       })
     },
     chanceRightDrawer() {
       this.$emit('chanceRightDrawer', this.rightDrawer)
+    },
+    requestFocus() {
+      this.$refs.password.focus()
     }
   }
 }
