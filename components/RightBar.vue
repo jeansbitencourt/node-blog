@@ -57,7 +57,7 @@ export default {
     },
     loginError: {
       get() {
-        return this.$store.state.loginError
+        return this.$store.state.login.loginError
       },
       set(value) {
         this.$store.commit('login/setLoginError', value)

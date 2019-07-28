@@ -91,9 +91,6 @@ export default {
       return this.$store.state.login.userData
     }
   },
-  created() {
-    this.$store.dispatch('category/loadLinks')
-  },
   mounted() {
     const cookieTk = this.$cookie.get('tkUser')
     const cookieUser = this.$cookie.get('dtUser')

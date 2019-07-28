@@ -9,7 +9,7 @@ export const actions = {
   login({ commit }, payload) {
     if (!payload.token) {
       axios
-        .post('/api/auth', {
+        .post(process.env.API_URL + '/auth', {
           userName: payload.userName,
           password: payload.password
         })

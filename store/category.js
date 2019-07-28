@@ -4,10 +4,17 @@ export const state = () => ({
 })
 
 export const actions = {
-  loadLinks({ commit }) {
-    axios.get('/api/categories').then((response) => {
-      commit('setLinks', response.data)
-    })
+  async loadLinks({ commit }) {
+    await axios
+      .get(process.env.API_URL + '/categories')
+      .then((response) => {
+        commit('setLinks', response.data)
+      })
+      .catch((e) => {
+        /* eslint-disable no-console */
+        console.log(e)
+        /* eslint-enable no-console */
+      })
   }
 }
 
