@@ -51,9 +51,9 @@
       </v-btn>
     </v-toolbar>
     <v-content>
-      <v-container>
+      <v-layout>
         <nuxt />
-      </v-container>
+      </v-layout>
     </v-content>
     <RightBar
       :rightDrawer="rightDrawer"
@@ -97,6 +97,9 @@ export default {
     if (cookieTk && cookieUser) {
       this.$store.dispatch('login/login', { token: cookieTk, user: cookieUser })
     }
+    $(document).ready(() => {
+      alert('oi')
+    })
   },
   methods: {
     ucFirst(word) {

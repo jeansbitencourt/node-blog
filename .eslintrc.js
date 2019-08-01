@@ -2,7 +2,10 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    node: true
+    node: true,
+    commonjs: true,
+    es6: true,
+    jquery: true
   },
   parserOptions: {
     parser: 'babel-eslint'
@@ -19,6 +22,7 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
-    'nuxt/no-cjs-in-config': 'off'
+    'nuxt/no-cjs-in-config': 'off',
+    "no-console": "off"
   }
 }
