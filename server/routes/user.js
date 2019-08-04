@@ -7,6 +7,10 @@ module.exports = function(app) {
     app.server.utils.auth.verifyJWT(req, res, next)
   })
 
+  app.get('/api/users/thisUser', function(req, res, next) {
+    app.server.controllers.userController.selectThisUser(app, req, res)
+  })
+
   app.get('/api/users', function(req, res, next) {
     app.server.controllers.userController.list(app, req, res)
   })

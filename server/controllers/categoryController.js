@@ -10,7 +10,7 @@ module.exports.list = function(app, req, res) {
 
 module.exports.select = function(app, req, res) {
   const id = req.params.id
-  app.server.models.category.findById(id, function (err, category) {
+  app.server.models.category.findById(id, function(err, category) {
     if (err) {
       res.status(400).json(err)
     } else {
@@ -30,7 +30,9 @@ module.exports.insert = function(app, req, res) {
         res.status(200).json(newCategory)
       })
     } else {
-      res.status(400).json({ category: 'failed on insert' })
+      res.status(400).json({
+        category: 'failed on insert'
+      })
     }
   })
 }
@@ -40,17 +42,21 @@ module.exports.update = function(app, req, res) {
     if (err) res.status(400).json(err)
     if (user && user.permissions.isAdmin) {
       const newCategory = req.body
-      app.models.category.findOneAndUpdate(
-        { _id: req.body._id },
-        newCategory,
-        { new: true },
-        function (err, categoryUpdate) {
+      app.models.category.findOneAndUpdate({
+          _id: req.body._id
+        },
+        newCategory, {
+          new: true
+        },
+        function(err, categoryUpdate) {
           if (err) res.status(400).json(err)
           res.json(categoryUpdate)
         }
       )
     } else {
-      res.status(400).json({ category: 'failed on update' })
+      res.status(400).json({
+        category: 'failed on update'
+      })
     }
   })
 }
@@ -61,10 +67,14 @@ module.exports.delete = function(app, req, res) {
     if (user && user.permissions.isAdmin) {
       app.server.models.category.findByIdAndRemove(req.body._id, function(err) {
         if (err) res.status(400).json(err)
-        res.json({ category: 'successfully removed' })
+        res.json({
+          category: 'successfully removed'
+        })
       })
     } else {
-      res.status(400).json({ user: 'failed on remove' })
+      res.status(400).json({
+        user: 'failed on remove'
+      })
     }
   })
 }

@@ -5,7 +5,11 @@
         <h2>Lista de postagens</h2>
       </v-flex>
       <v-flex xs4 text-lg-right>
-        <v-btn color="primary" to="/post/form">Novo</v-btn>
+        <v-btn
+          color="primary"
+          :to="'/admin/post/' + this.$store.state.login.userToken"
+          >Novo
+        </v-btn>
       </v-flex>
     </v-layout>
     <v-data-table
@@ -33,6 +37,7 @@
 
 <script>
 export default {
+  middleware: 'isAuthor',
   data() {
     return {
       headers: [

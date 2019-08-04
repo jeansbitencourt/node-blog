@@ -50,5 +50,6 @@ export const mutations = {
     state.userData = {}
     data.cookie.delete('tkUser')
     data.cookie.delete('dtUser')
+    data.router.push('/')
   }
 }

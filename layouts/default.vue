@@ -28,9 +28,11 @@
       <v-btn v-show="drawer" icon @click.stop="miniVariant = !miniVariant">
         <v-icon>{{ `chevron_${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
-      <v-toolbar-title
-        v-text="blogName + (user.name ? ' - Olá ' + user.name.firstName : '')"
-      />
+      <nuxt-link to="/" class="no-text-decoration">
+        <v-toolbar-title
+          v-text="blogName + (user.name ? ' - Olá ' + user.name.firstName : '')"
+        />
+      </nuxt-link>
       <v-spacer />
       <v-toolbar-title>
         <v-text-field
@@ -56,7 +58,7 @@
       </v-layout>
     </v-content>
     <RightBar
-      :rightDrawer="rightDrawer"
+      :right-drawer="rightDrawer"
       :user="user"
       @chanceRightDrawer="rightDrawer = $event"
     />
@@ -66,7 +68,15 @@
   </v-app>
 </template>
 
+<style>
+.no-text-decoration {
+  text-decoration: none;
+  color: #fff;
+}
+</style>
+
 <script>
+import Swal from 'sweetalert2'
 import RightBar from '~/components/RightBar.vue'
 export default {
   components: {
@@ -97,9 +107,7 @@ export default {
     if (cookieTk && cookieUser) {
       this.$store.dispatch('login/login', { token: cookieTk, user: cookieUser })
     }
-    $(document).ready(() => {
-      alert('oi')
-    })
+    Swal.fire('The Internet?', 'That thing is still around?', 'question')
   },
   methods: {
     ucFirst(word) {

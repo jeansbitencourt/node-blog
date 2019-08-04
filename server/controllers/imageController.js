@@ -12,7 +12,7 @@ module.exports.list = function(app, req, res) {
 
 module.exports.select = function(app, req, res) {
   const id = req.params.id
-  app.server.models.image.findById(id, function (err, image) {
+  app.server.models.image.findById(id, function(err, image) {
     if (err) {
       res.status(400).json(err)
     } else {
@@ -23,7 +23,7 @@ module.exports.select = function(app, req, res) {
 
 module.exports.selectData = function(app, req, res) {
   const id = req.params.id
-  app.server.models.image.findById(id, function (err, image) {
+  app.server.models.image.findById(id, function(err, image) {
     if (err) {
       res.status(400).json(err)
     } else {
@@ -36,17 +36,17 @@ module.exports.selectData = function(app, req, res) {
 module.exports.insert = function(app, req, res) {
   const Image = app.server.models.image
   const image = new Image()
-  app.server.models.user.findById(req.body.userId, function (err, user) {
+  app.server.models.user.findById(req.body.userId, function(err, user) {
     if (err) res.status(400).json(err)
     if (user && (user.permissions.isAdmin || user.permissions.createPosts)) {
       console.log(req.files)
-      fs.readFile(req.files.file.path, function (err, data) {
+      fs.readFile(req.files.file.path, function(err, data) {
         if (err) res.status(400).json(err)
         if (data) {
           image.name = req.body.name
           image.data = data
           image.contentType = 'image/png'
-          image.save(function (err, newImage) {
+          image.save(function(err, newImage) {
             if (err) res.status(400).json(err)
             res.json(newImage)
           })
@@ -69,7 +69,7 @@ module.exports.update = function(app, req, res) {
         { _id: req.body._id },
         newImage,
         { new: true },
-        function (err, imageUpdate) {
+        function(err, imageUpdate) {
           if (err) res.status(400).json(err)
           res.json(imageUpdate)
         }

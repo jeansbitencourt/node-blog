@@ -1,3 +1,3 @@
 module.exports = {
-  URLCONN: 'mongodb://localhost:27017/nodeBlog'
+  URLCONN: process.env.DB_URL
 }

@@ -35,10 +35,15 @@
       <v-card-actions>
         <v-btn block color="primary">Perfil</v-btn>
       </v-card-actions>
-      <v-card-actions>
-        <v-btn block color="primary" to="/post/list">Postagens</v-btn>
+      <v-card-actions v-if="user.permissions.createPosts">
+        <v-btn
+          block
+          color="primary"
+          :to="'/admin/post/' + this.$store.state.login.userToken + '/list'"
+          >Postagens
+        </v-btn>
       </v-card-actions>
-      <v-card-actions>
+      <v-card-actions v-if="user.permissions.isAdmin">
         <v-btn block color="primary">Categorias</v-btn>
       </v-card-actions>
     </v-card>
@@ -87,8 +92,10 @@ export default {
       })
     },
     logout() {
+      console.log(this.$router)
       this.$store.dispatch('login/logout', {
-        cookie: this.$cookie
+        cookie: this.$cookie,
+        router: this.$router
       })
     },
     chanceRightDrawer() {

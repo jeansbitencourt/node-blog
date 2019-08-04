@@ -1,4 +1,5 @@
 const colors = require('vuetify/es5/util/colors').default
+const webpack = require("webpack");
 
 module.exports = {
   mode: 'universal',
@@ -42,7 +43,7 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/vue-cookie', '~plugins/bootstrap.js'],
+  plugins: ['~/plugins/vue-cookie', '~plugins/bootstrap.js',  { ssr: false, src: '~plugins/editor.js' }],
   /*
    ** Nuxt.js modules
    */
@@ -80,6 +81,13 @@ module.exports = {
     /*
      ** You can extend webpack config here
      */
+    plugins: [
+      new webpack.ProvidePlugin({
+        jQuery: 'jquery',
+        $: 'jquery',
+        'window.jQuery': 'jquery',
+      })
+    ],
     extend(config, ctx) {}
   }
 }

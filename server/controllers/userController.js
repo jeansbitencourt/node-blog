@@ -124,3 +124,14 @@ module.exports.login = function (app, req, res) {
     }
   })
 }
+
+module.exports.selectThisUser = function (app, req, res) {
+  app.server.models.user.findById(req.body.userId, function(err, user) {
+    if (err) {
+      res.status(400).json(err)
+    } else {
+      res.json(user)
+    }
+  })
+}
+
