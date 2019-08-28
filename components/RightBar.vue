@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 export default {
   data() {
     return {
@@ -92,10 +93,24 @@ export default {
       })
     },
     logout() {
-      console.log(this.$router)
-      this.$store.dispatch('login/logout', {
-        cookie: this.$cookie,
-        router: this.$router
+      Swal.fire({
+        title: 'Tem certeza?',
+        text: 'Você tem certeza que deseja sair?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, quero sair!',
+        cancelButtonText: 'Não'
+      }).then((result) => {
+        if (result.value) {
+          this.username = ''
+          this.password = ''
+          this.$store.dispatch('login/logout', {
+            cookie: this.$cookie,
+            router: this.$router
+          })
+        }
       })
     },
     chanceRightDrawer() {

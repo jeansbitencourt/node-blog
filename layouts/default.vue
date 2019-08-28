@@ -76,7 +76,6 @@
 </style>
 
 <script>
-import Swal from 'sweetalert2'
 import RightBar from '~/components/RightBar.vue'
 export default {
   components: {
@@ -107,7 +106,6 @@ export default {
     if (cookieTk && cookieUser) {
       this.$store.dispatch('login/login', { token: cookieTk, user: cookieUser })
     }
-    Swal.fire('The Internet?', 'That thing is still around?', 'question')
   },
   methods: {
     ucFirst(word) {

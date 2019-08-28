@@ -11,6 +11,13 @@ module.exports.verifyJWT = function(req, res, next) {
   }
 
   jwt.verify(token, process.env.SECRET, function(err, decoded) {
+    const now = Date.now().valueOf() / 1000
+    if (typeof decoded !== 'undefined' && typeof decoded.exp !== 'undefined' && decoded.exp < now) {
+      return res.status(500).send({
+        auth: false,
+        message: 'Token expired.'
+      })
+    }
     if (err) {
       return res.status(500).send({
         auth: false,
@@ -18,7 +25,7 @@ module.exports.verifyJWT = function(req, res, next) {
       })
     }
 
-    // se tudo estiver ok, salva no request para uso posterior
+    // se tudo estiver ok, salvar id do usuario no req
     req.body.userId = decoded.id
     next()
   })
@@ -32,7 +39,7 @@ module.exports.getNewAuth = function(user, res) {
     },
     process.env.SECRET,
     {
-      expiresIn: 86400 // expires in 24h
+      expiresIn: 18000 // expires in 5h
     }
   )
   const us = JSON.parse(JSON.stringify(user))

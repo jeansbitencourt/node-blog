@@ -1,12 +1,11 @@
-import axios from 'axios'
 export const state = () => ({
   categories: []
 })
 
 export const actions = {
   async loadLinks({ commit }) {
-    await axios
-      .get(process.env.API_URL + '/categories')
+    await this.$axios
+      .get('categories')
       .then((response) => {
         commit('setLinks', response.data)
       })

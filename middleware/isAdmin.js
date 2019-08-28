@@ -1,5 +1,4 @@
-import axios from 'axios'
-export default ({ route, store, redirect }) => {
+export default ({ $axios, route, store, redirect }) => {
   if (process.client) {
     if (
       !store.state.login.userData ||
@@ -9,8 +8,8 @@ export default ({ route, store, redirect }) => {
       return redirect('/')
     }
   } else {
-    return axios
-      .get(process.env.API_URL + '/users/thisUser', {
+    return $axios
+      .get('users/thisUser', {
         headers: {
           'x-access-token': route.params.token
         }

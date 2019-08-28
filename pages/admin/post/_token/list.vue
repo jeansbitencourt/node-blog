@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-layout wrap>
       <v-flex xs8 text-center>
-        <h2>Lista de postagens</h2>
+        <h2>Lista de postagens {{ postList }}</h2>
       </v-flex>
       <v-flex xs4 text-lg-right>
         <v-btn
@@ -38,6 +38,14 @@
 <script>
 export default {
   middleware: 'isAuthor',
+  computed: {
+    postList() {
+      return this.$store.state.post.list
+    }
+  },
+  created() {
+    this.$store.dispatch('post/getList')
+  },
   data() {
     return {
       headers: [

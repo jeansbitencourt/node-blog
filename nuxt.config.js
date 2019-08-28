@@ -43,7 +43,7 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/vue-cookie', '~plugins/bootstrap.js',  { ssr: false, src: '~plugins/editor.js' }],
+  plugins: ['~/plugins/vue-cookie', '~plugins/bootstrap.js',  { ssr: false, src: '~plugins/editor.js' }, '~/plugins/axios'],
   /*
    ** Nuxt.js modules
    */

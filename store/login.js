@@ -1,4 +1,3 @@
-import axios from 'axios'
 export const state = () => ({
   userToken: '',
   userData: {},
@@ -8,8 +7,8 @@ export const state = () => ({
 export const actions = {
   login({ commit }, payload) {
     if (!payload.token) {
-      axios
-        .post('/api/auth', {
+      this.$axios
+        .post('auth', {
           userName: payload.userName,
           password: payload.password
         })
