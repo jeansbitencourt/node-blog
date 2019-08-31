@@ -8,28 +8,30 @@
       app
     >
       <v-list>
-        <v-list-tile
+        <v-list-item
           v-for="(category, i) in categories"
           :key="i"
           :to="category.route"
           router
+          exact
         >
-          <v-list-tile-action>
+          <v-list-item-action>
             <v-icon>{{ category.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="ucFirst(category.name)" />
-          </v-list-tile-content>
-        </v-list-tile>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="ucFirst(category.name)" />
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar :clipped-left="clipped" fixed app>
-      <v-toolbar-side-icon @click="drawer = !drawer" />
+    <v-app-bar :clipped-left="clipped" fixed app>
+      <v-app-bar-nav-icon @click="drawer = !drawer" />
       <v-btn v-show="drawer" icon @click.stop="miniVariant = !miniVariant">
         <v-icon>{{ `chevron_${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
       <nuxt-link to="/" class="no-text-decoration">
         <v-toolbar-title
+          class="white--text"
           v-text="blogName + (user.name ? ' - Olá ' + user.name.firstName : '')"
         />
       </nuxt-link>
@@ -51,7 +53,7 @@
       >
         <v-icon>menu</v-icon>
       </v-btn>
-    </v-toolbar>
+    </v-app-bar>
     <v-content>
       <v-layout>
         <nuxt />
@@ -77,6 +79,12 @@
 
 <script>
 import RightBar from '~/components/RightBar.vue'
+function isMobile() {
+  return (
+    typeof window.orientation !== 'undefined' ||
+    navigator.userAgent.indexOf('IEMobile') !== -1
+  )
+}
 export default {
   components: {
     RightBar
@@ -98,6 +106,11 @@ export default {
     },
     user() {
       return this.$store.state.login.userData
+    }
+  },
+  created() {
+    if (process.client && isMobile()) {
+      this.drawer = false
     }
   },
   mounted() {

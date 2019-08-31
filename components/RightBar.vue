@@ -17,7 +17,7 @@
         />
       </v-card-title>
       <v-card-actions>
-        <v-btn flat color="primary" @click="login">Entrar</v-btn>
+        <v-btn text color="primary" @click="login">Entrar</v-btn>
       </v-card-actions>
     </v-card>
     <v-card v-if="user.name">
@@ -77,10 +77,10 @@ export default {
     },
     loginError: {
       get() {
-        return this.$store.state.login.loginError
+        return this.$store.state.login.loginError != null
       },
       set(value) {
-        this.$store.commit('login/setLoginError', value)
+        this.$store.commit('login/setLoginError', null)
       }
     }
   },
@@ -118,6 +118,15 @@ export default {
     },
     requestFocus() {
       this.$refs.password.focus()
+    }
+  },
+  mounted() {
+    const login = window.location.search.split('logout=')[1]
+    if (login) {
+      this.$store.dispatch('login/logout', {
+        cookie: this.$cookie,
+        router: this.$router
+      })
     }
   }
 }

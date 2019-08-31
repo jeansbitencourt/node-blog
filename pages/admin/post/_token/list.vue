@@ -4,7 +4,7 @@
       <v-flex xs8 text-center>
         <h2>Lista de postagens {{ postList }}</h2>
       </v-flex>
-      <v-flex xs4 text-lg-right>
+      <v-flex py-2 xs4 text-lg-right>
         <v-btn
           color="primary"
           :to="'/admin/post/' + this.$store.state.login.userToken"
