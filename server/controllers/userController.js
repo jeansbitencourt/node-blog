@@ -108,7 +108,7 @@ module.exports.login = function (app, req, res) {
           user.save(function(err) {
             if (err) console.log(err)
           })
-          app.server.utils.auth.getNewAuth(user, res)
+          app.server.utils.auth.getNewAuth(user, req, res)
         } else {
           res.status(401).send({
             auth: false,

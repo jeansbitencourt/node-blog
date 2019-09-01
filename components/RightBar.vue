@@ -44,7 +44,12 @@
         </v-btn>
       </v-card-actions>
       <v-card-actions v-if="user.permissions.isAdmin">
-        <v-btn block color="primary">Categorias</v-btn>
+        <v-btn
+          block
+          color="primary"
+          :to="'/admin/category/' + this.$store.state.login.userToken + '/list'"
+          >Categorias
+        </v-btn>
       </v-card-actions>
     </v-card>
     <v-alert v-model="loginError" dismissible type="error">
@@ -123,9 +128,16 @@ export default {
   mounted() {
     const login = window.location.search.split('logout=')[1]
     if (login) {
-      this.$store.dispatch('login/logout', {
-        cookie: this.$cookie,
-        router: this.$router
+      Swal.fire({
+        title: 'Oops',
+        text: 'Sua sessão expirou!',
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      }).then((result) => {
+        this.$store.dispatch('login/logout', {
+          cookie: this.$cookie,
+          router: this.$router
+        })
       })
     }
   }

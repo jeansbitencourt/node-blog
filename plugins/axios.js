@@ -1,5 +1,3 @@
-import Swal from 'sweetalert2'
-
 export default ({ $axios, store, router, cookie }) => {
   $axios.interceptors.request.use((request) => {
     request.baseURL = '/api/'
@@ -15,14 +13,7 @@ export default ({ $axios, store, router, cookie }) => {
 
   $axios.interceptors.response.use((response) => {
     if (response.status === 401 && process.client) {
-      Swal.fire({
-        title: 'Oops',
-        text: 'Sua sessão expirou!',
-        type: 'warning',
-        confirmButtonText: 'Ok'
-      }).then((result) => {
-        window.location.assign('/?logout=true')
-      })
+      window.location.assign('/?logout=true')
     }
     return response
   })

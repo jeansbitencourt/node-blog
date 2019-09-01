@@ -20,7 +20,7 @@ export default ({ $axios, route, store, redirect }) => {
         }
       })
       .catch(() => {
-        redirect('/')
+        redirect('/?logout=true')
       })
   }
 }
