@@ -15,16 +15,6 @@ export const actions = {
         /* eslint-disable no-console */
         console.log(e)
         /* eslint-enable no-console */
-        dispatch(
-          'alert',
-          {
-            msg: 'Erro ao carregar links! ' + e,
-            type: 'error'
-          },
-          {
-            root: true
-          }
-        )
       })
   },
   async getList({ commit, dispatch }) {
@@ -34,15 +24,8 @@ export const actions = {
         if (res.status === 200) {
           commit('setList', res.data)
         } else {
-          dispatch(
-            'alert',
-            {
-              msg: 'Erro ao carregar categorias! (status ' + res.status + ')',
-              type: 'error'
-            },
-            {
-              root: true
-            }
+          throw new Error(
+            'Erro ao carregar categorias! (status ' + res.status + ')'
           )
         }
       })
@@ -50,16 +33,6 @@ export const actions = {
         /* eslint-disable no-console */
         console.log(e)
         /* eslint-enable no-console */
-        dispatch(
-          'alert',
-          {
-            msg: 'Erro ao carregar categorias! ' + e,
-            type: 'error'
-          },
-          {
-            root: true
-          }
-        )
       })
   },
   async create({ dispatch }, category) {
@@ -78,15 +51,8 @@ export const actions = {
             }
           )
         } else {
-          dispatch(
-            'alert',
-            {
-              msg: 'Erro ao criar categoria! (status ' + res.status + ')',
-              type: 'error'
-            },
-            {
-              root: true
-            }
+          throw new Error(
+            'Erro ao criar categoria! (status ' + res.status + ')'
           )
         }
       })
@@ -94,16 +60,6 @@ export const actions = {
         /* eslint-disable no-console */
         console.log(e)
         /* eslint-enable no-console */
-        dispatch(
-          'alert',
-          {
-            msg: 'Erro ao criar categoria! ' + e,
-            type: 'error'
-          },
-          {
-            root: true
-          }
-        )
       })
   },
   async save({ dispatch }, category) {
@@ -122,15 +78,8 @@ export const actions = {
             }
           )
         } else {
-          dispatch(
-            'alert',
-            {
-              msg: 'Erro ao criar categoria! (status ' + res.status + ')',
-              type: 'error'
-            },
-            {
-              root: true
-            }
+          throw new Error(
+            'Erro ao salvar categoria! (status ' + res.status + ')'
           )
         }
       })
@@ -138,16 +87,6 @@ export const actions = {
         /* eslint-disable no-console */
         console.log(e)
         /* eslint-enable no-console */
-        dispatch(
-          'alert',
-          {
-            msg: 'Erro ao criar categoria! ' + e,
-            type: 'error'
-          },
-          {
-            root: true
-          }
-        )
       })
   },
   async delete({ dispatch }, { item, onSuccess }) {
@@ -172,16 +111,8 @@ export const actions = {
                 )
                 onSuccess()
               } else {
-                dispatch(
-                  'alert',
-                  {
-                    msg:
-                      'Erro ao excluir categoria! (status ' + res.status + ')',
-                    type: 'error'
-                  },
-                  {
-                    root: true
-                  }
+                throw new Error(
+                  'Erro ao excluir a categoria! (status ' + res.status + ')'
                 )
               }
             })
@@ -189,16 +120,6 @@ export const actions = {
               /* eslint-disable no-console */
               console.log(e)
               /* eslint-enable no-console */
-              dispatch(
-                'alert',
-                {
-                  msg: 'Erro ao excluir categoria! ' + e,
-                  type: 'error'
-                },
-                {
-                  root: true
-                }
-              )
             })
         }
       },

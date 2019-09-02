@@ -10,11 +10,4 @@ export default ({ $axios, store, router, cookie }) => {
     }
     return request
   })
-
-  $axios.interceptors.response.use((response) => {
-    if (response.status === 401 && process.client) {
-      window.location.assign('/?logout=true')
-    }
-    return response
-  })
 }
