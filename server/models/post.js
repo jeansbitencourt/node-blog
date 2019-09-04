@@ -20,18 +20,26 @@ module.exports = function(app) {
         required: true,
         unique: true
       },
-      keywords: {
-        type: String
+      published: {
+        type: Boolean,
+        required: true
       },
-      url: {
+      keywords: [
+        {
+          type: String
+        }
+      ],
+      slug: {
         type: String,
         default: defaultUrl(this.title),
         lowercase: true
       },
-      category: {
-        type: Schema.Types.ObjectId,
-        ref: 'Category'
-      },
+      categories: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'Category'
+        }
+      ],
       text: {
         type: String
       },

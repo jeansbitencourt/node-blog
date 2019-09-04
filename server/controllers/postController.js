@@ -1,7 +1,7 @@
 module.exports.list = function(app, req, res) {
   app.server.models.post
     .find({})
-    .populate('category')
+    .populate('categories')
     .populate('images')
     .exec(function(err, posts) {
       if (err) {
@@ -16,7 +16,7 @@ module.exports.select = function(app, req, res) {
   const id = req.params.id
   app.server.models.post
     .findById(id)
-    .populate('category')
+    .populate('categories')
     .populate('images')
     .exec(function (err, post) {
       if (err) {
@@ -28,7 +28,7 @@ module.exports.select = function(app, req, res) {
 }
 
 module.exports.insert = function(app, req, res) {
-  const Post = app.models.post
+  const Post = app.server.models.post
   const post = new Post(req.body)
   app.server.models.user.findById(req.body.userId, function (err, user) {
     if (err) res.status(400).json(err)
