@@ -1,167 +1,153 @@
 <template>
-  <v-container fluid>
-    <v-layout wrap>
-      <v-flex xs8 text-center>
-        <h2>Lista de postagens {{ postList }}</h2>
-      </v-flex>
-      <v-flex py-2 xs4 text-lg-right>
-        <v-btn
-          color="primary"
-          :to="'/admin/post/' + this.$store.state.login.userToken"
-          >Novo
-        </v-btn>
-      </v-flex>
-    </v-layout>
+  <v-container>
     <v-data-table
       :headers="headers"
-      :items="posts"
-      :items-per-page="10"
-      :loading="false"
+      :items="items"
+      sort-by="creationDate"
+      sort-desc
       class="elevation-1"
     >
-      <template slot="items" slot-scope="props">
-        <td>{{ props.item.name }}</td>
-        <td class="text-xs-right">{{ props.item.calories }}</td>
-        <td class="text-xs-right">{{ props.item.fat }}</td>
-        <td class="text-xs-right">{{ props.item.carbs }}</td>
-        <td class="text-xs-right">{{ props.item.protein }}</td>
-        <td class="text-xs-right">{{ props.item.iron }}</td>
-        <td class="text-xs-right">
-          <v-btn color="primary">Editar</v-btn>
-          <v-btn color="error">Excluir</v-btn>
-        </td>
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
+          <v-divider class="mx-4" inset vertical />
+          <div class="flex-grow-1"></div>
+          <v-dialog max-width="500px">
+            <template v-slot:activator="{ on }">
+              <v-btn
+                color="primary"
+                class="mb-2"
+                v-on="on"
+                :to="'/admin/post/' + userToken"
+                >Nova postagem
+              </v-btn>
+            </template>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.action="{ item }">
+        <v-icon small class="mr-2" @click="editItem(item)">
+          edit
+        </v-icon>
+        <v-icon small @click="deleteItem(item)">
+          delete
+        </v-icon>
+      </template>
+      <template v-slot:no-data>
+        <v-btn color="primary" @click="initialize(false)">Carregar lista</v-btn>
+      </template>
+      <template v-slot:item.published="{ item }">
+        {{ item.published ? 'Publicado' : 'Não publicado' }}
+      </template>
+      <template v-slot:item.categories="{ item }">
+        <v-chip
+          class="ml-1"
+          v-for="(category, i) in item.categories"
+          :key="i"
+          >{{ category.name }}</v-chip
+        >
+      </template>
+      <template v-slot:item.keywords="{ item }">
+        <v-chip
+          small
+          class="ml-1"
+          v-for="(keyword, i) in item.keywords"
+          :key="i"
+          >{{ keyword }}</v-chip
+        >
+      </template>
+      <template v-slot:item.creationDate="{ item }">
+        {{ dateToStr(item.creationDate) }}
+      </template>
+      <template v-slot:item.updateDate="{ item }">
+        {{ dateToStr(item.updateDate) }}
       </template>
     </v-data-table>
   </v-container>
 </template>
 
 <script>
+import utils from '~/assets/js/utils'
 export default {
   middleware: 'isAuthor',
   computed: {
-    postList() {
+    items() {
       return this.$store.state.post.list
+    },
+    userToken() {
+      return this.$store.state.login.userToken
     }
   },
   created() {
-    this.$store.dispatch('post/getList')
+    this.initialize()
   },
   data() {
     return {
+      pageTitle: 'Lista de postagens',
+      editedIndex: -1,
+      editedItem: {
+        name: '',
+        description: '',
+        icon: ''
+      },
+      defaultItem: {
+        name: '',
+        description: '',
+        icon: ''
+      },
       headers: [
         {
-          text: 'Dessert (100g serving)',
-          align: 'left',
-          sortable: false,
-          value: 'name'
+          text: 'Título',
+          value: 'title'
         },
         {
-          text: 'Calories',
-          value: 'calories'
+          text: 'Categorias',
+          value: 'categories'
         },
         {
-          text: 'Fat (g)',
-          value: 'fat'
+          text: 'Keywords',
+          value: 'keywords'
         },
         {
-          text: 'Carbs (g)',
-          value: 'carbs'
+          text: 'Data de criação',
+          value: 'creationDate'
         },
         {
-          text: 'Protein (g)',
-          value: 'protein'
+          text: 'Data de última edição',
+          value: 'updateDate'
         },
         {
-          text: 'Iron (%)',
-          value: 'iron'
+          text: 'Status',
+          value: 'published'
         },
         {
           text: 'Ações',
-          value: 'actions'
-        }
-      ],
-      posts: [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: '1%'
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: '1%'
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: '7%'
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: '8%'
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: '16%'
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: '0%'
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: '2%'
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: '45%'
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: '22%'
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: '6%'
+          value: 'action',
+          sortable: false
         }
       ]
+    }
+  },
+  methods: {
+    initialize() {
+      this.$store.dispatch('post/getList')
+    },
+
+    editItem(item) {
+      this.$router.push('/admin/post/' + this.userToken + '/' + item._id)
+    },
+
+    deleteItem(item) {
+      this.$store.dispatch('post/delete', {
+        item: item,
+        onSuccess: () => {
+          this.initialize()
+        }
+      })
+    },
+
+    dateToStr(date) {
+      return utils.dateToStr(date)
     }
   }
 }

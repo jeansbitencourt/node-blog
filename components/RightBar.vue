@@ -17,7 +17,7 @@
         />
       </v-card-title>
       <v-card-actions>
-        <v-btn text color="primary" @click="login">Entrar</v-btn>
+        <v-btn color="primary" @click="login">Entrar</v-btn>
       </v-card-actions>
     </v-card>
     <v-card v-if="user.name">

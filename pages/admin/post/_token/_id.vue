@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <no-ssr>
-      <v-layout>
+      <v-card class="pa-2">
         <v-row>
           <v-col cols="12">
             <v-layout>
@@ -82,7 +82,7 @@
             </v-layout>
           </v-col>
         </v-row>
-      </v-layout>
+      </v-card>
     </no-ssr>
   </v-container>
 </template>

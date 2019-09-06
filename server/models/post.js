@@ -5,7 +5,7 @@ defaultUrl = function(title) {
   if (title != undefined) {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
     const date = new Date().toLocaleDateString('pt-BR', options)
-    return date.replace('/', '-') + '-' + title.replace(' ', '-')
+    return date.replace('/', '-') + '-' + title.replace(/ /g, '-')
   }
   return ''
 }
@@ -13,6 +13,27 @@ defaultUrl = function(title) {
 module.exports = function(app) {
   const Category = app.server.models.category
   const Image = app.server.models.image
+  const User = app.server.models.user
+
+  const Log = new Schema(
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+      },
+      date: {
+        type: Date,
+        max: Date.now,
+        default: Date.now
+      },
+      action: {
+        type: String,
+        required: true
+      }
+    }
+  )
+
   const Post = new Schema(
     {
       title: {
@@ -20,9 +41,14 @@ module.exports = function(app) {
         required: true,
         unique: true
       },
+      deleted: {
+        type: Boolean,
+        default: false
+      },
       published: {
         type: Boolean,
-        required: true
+        required: true,
+        default: false
       },
       keywords: [
         {
@@ -31,8 +57,22 @@ module.exports = function(app) {
       ],
       slug: {
         type: String,
-        default: defaultUrl(this.title),
         lowercase: true
+      },
+      creationDate: {
+        type: Date,
+        max: Date.now,
+        default: Date.now
+      },
+      updateDate: {
+        type: Date,
+        max: Date.now,
+        default: Date.now
+      },
+      createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
       },
       categories: [
         {
@@ -48,12 +88,20 @@ module.exports = function(app) {
           type: Schema.Types.ObjectId,
           ref: 'Image'
         }
+      ],
+      logs: [
+        Log
       ]
     },
     {
       collection: 'posts'
     }
   )
+
+  Post.pre('save', function (next) {
+    this.slug = defaultUrl(this.get('title'))
+    next();
+  });
 
   return mongoose.model('Post', Post)
 }

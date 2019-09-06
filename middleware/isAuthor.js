@@ -7,20 +7,19 @@ export default ({ $axios, route, store, redirect }) => {
     ) {
       return redirect('/')
     }
-  } else {
-    return $axios
-      .get('users/thisUser', {
-        headers: {
-          'x-access-token': route.params.token
-        }
-      })
-      .then((response) => {
-        if (!response.data.permissions.createPosts) {
-          redirect('/')
-        }
-      })
-      .catch(() => {
-        redirect('/?logout=true')
-      })
   }
+  return $axios
+    .get('users/thisUser', {
+      headers: {
+        'x-access-token': route.params.token
+      }
+    })
+    .then((response) => {
+      if (!response.data.permissions.createPosts) {
+        redirect('/')
+      }
+    })
+    .catch(() => {
+      redirect('/?logout=true')
+    })
 }
