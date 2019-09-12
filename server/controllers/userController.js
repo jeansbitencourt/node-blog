@@ -25,7 +25,7 @@ module.exports.select = function (app, req, res) {
 module.exports.insert = function (app, req, res) {
   const User = app.server.models.user
   const user = new User(req.body)
-  app.server.models.user.count({}, function(err, count) {
+  app.server.models.user.countDocuments({}, function(err, count) {
     if (err) res.status(400).json(err)
     if (count == 0) {
       user.permissions.isAdmin = true

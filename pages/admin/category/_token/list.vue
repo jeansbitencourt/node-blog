@@ -77,6 +77,9 @@
           delete
         </v-icon>
       </template>
+      <template v-slot:item.creationDate="{ item }">
+        {{ dateToStr(item.creationDate) }}
+      </template>
       <template v-slot:no-data>
         <v-btn color="primary" @click="initialize(false)">Carregar lista</v-btn>
       </template>
@@ -85,6 +88,7 @@
 </template>
 
 <script>
+import utils from '~/assets/js/utils'
 export default {
   middleware: 'isAdmin',
   computed: {
@@ -180,6 +184,10 @@ export default {
         })
       }
       this.close()
+    },
+
+    dateToStr(date) {
+      return utils.dateToStr(date)
     }
   },
   watch: {

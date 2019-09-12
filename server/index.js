@@ -9,6 +9,7 @@ const path = require('path')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const consign = require('consign')
+require('dotenv').config()
 
 app.use(cookieParser())
 app.use(expressValidator())
@@ -47,7 +48,9 @@ async function start() {
   mongoose.Promise = global.Promise
   mongoose.set('useCreateIndex', true)
   mongoose.set('useFindAndModify', false)
-  mongoose.connect(app.server.utils.DB.URLCONN, { useNewUrlParser: true }).then(
+  mongoose.set('useUnifiedTopology', true)
+  mongoose.set('useNewUrlParser', true)
+  mongoose.connect(app.server.utils.DB.URLCONN).then(
     () => {
       console.log('Database is connected')
     },
