@@ -81,7 +81,10 @@
         {{ dateToStr(item.creationDate) }}
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize(false)">Carregar lista</v-btn>
+        Não há itens
+        <v-btn text color="primary" click="initialize(false)">
+          Tentar carregar a lista novamente
+        </v-btn>
       </template>
     </v-data-table>
   </v-container>

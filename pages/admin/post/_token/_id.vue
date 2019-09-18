@@ -65,7 +65,7 @@
               name="content"
             />
             <v-layout>
-              <v-flex md11>
+              <v-flex md4>
                 <v-file-input
                   @change="onFileChange"
                   chips
@@ -76,13 +76,44 @@
                   accept="image/png, image/jpeg, image/bmp, image/gif"
                 />
               </v-flex>
-              <v-flex md1 pl-5 pt-3>
-                <v-btn color="primary" :disabled="!fileName">Enviar</v-btn>
+              <v-flex md2 pl-5 pt-3>
+                <v-btn color="primary" :disabled="!file" @click="onFileUpload">
+                  Enviar imagem
+                </v-btn>
+              </v-flex>
+              <v-flex md2 v-for="(image, i) in images" :key="i">
+                <v-img
+                  :src="'/api/images/data/' + image"
+                  aspect-ratio="1.7"
+                  contain
+                  @click.stop="
+                    showImgModal = true
+                    imgModal = '/api/images/data/' + image
+                  "
+                  class="img"
+                />
               </v-flex>
             </v-layout>
           </v-col>
         </v-row>
       </v-card>
+      <v-dialog v-model="showImgModal" max-width="800px">
+        <v-card>
+          <v-card-actions>
+            <v-img :src="imgModal" aspect-ratio="2" contain />
+            <v-text-field
+              :value="imgModal"
+              label="URL da imagem"
+              @click="copyUrl"
+              id="inputUrlImg"
+              readonly
+            />
+            <v-btn color="red" @click="deleteImage(imgModal)">
+              Excluir
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </no-ssr>
   </v-container>
 </template>
@@ -93,6 +124,9 @@
 }
 .trumbowyg-button-pane {
   z-index: 3 !important;
+}
+.img {
+  cursor: pointer;
 }
 </style>
 
@@ -113,10 +147,15 @@ export default {
     },
     getPost() {
       return this.$store.state.post.post
+    },
+    getImage() {
+      return this.$store.state.image.image
     }
   },
   data() {
     return {
+      showImgModal: false,
+      imgModal: null,
       id: this.$route.params.id,
       config: {
         disabled: false
@@ -132,10 +171,11 @@ export default {
       ],
       title: null,
       published: false,
-      categories: null,
+      categories: [],
       keywords: null,
       text: null,
-      fileName: false
+      file: null,
+      images: []
     }
   },
   methods: {
@@ -146,13 +186,6 @@ export default {
       this.$router.back()
     },
     save() {
-      const categories = []
-      if (categories) {
-        this.categories.forEach((item) => {
-          categories.push(item)
-        })
-      }
-
       if (!this.title || !this.categories || !this.keywords || !this.text) {
         this.$toast.error('Erro ao salvar! Preencha todos os campos!')
       } else if (this.id) {
@@ -160,10 +193,11 @@ export default {
           .dispatch('post/save', {
             _id: this.id,
             title: this.title,
-            categories: categories,
+            categories: this.categories,
             keywords: this.keywords,
             published: this.published,
-            text: this.text
+            text: this.text,
+            images: this.images
           })
           .then(() => {
             this.getPostData()
@@ -172,10 +206,11 @@ export default {
         this.$store
           .dispatch('post/create', {
             title: this.title,
-            categories: categories,
+            categories: this.categories,
             keywords: this.keywords,
             published: this.published,
-            text: this.text
+            text: this.text,
+            images: this.images
           })
           .then(() => {
             this.getPostData()
@@ -191,6 +226,10 @@ export default {
         this.text = post.text
         this.id = post._id
         this.keywords = post.keywords
+        this.images = []
+        post.images.forEach((image) => {
+          this.images.push(image._id)
+        })
       } else {
         this.$toast.error('Erro 404, postagem não encontrada')
         setTimeout(() => {
@@ -201,17 +240,53 @@ export default {
     onFileChange(file) {
       if (file) {
         if (file.type.substring(0, 5) === 'image') {
-          this.fileName = file.name
+          this.file = file
         } else {
-          this.fileName = false
+          this.file = null
           this.$toast.error('Erro! Formato de arquivo inválido!')
         }
       } else {
-        this.fileName = false
+        this.file = null
       }
     },
     onFileUpload() {
-      this.$toast.info('Enviando o arquivo ' + this.fileName)
+      if (this.file) {
+        this.$toast.info('Enviando o arquivo ' + this.file.name)
+        this.$store.dispatch('image/create', this.file).then(() => {
+          this.images.push(this.getImage._id)
+          this.save()
+          this.file = null
+        })
+      } else {
+        this.$toast.error('Erro ao enviar! Selecione um arquivo de imagem!')
+      }
+    },
+    copyUrl() {
+      const input = document.getElementById('inputUrlImg')
+      input.select()
+      input.setSelectionRange(0, 99999)
+      document.execCommand('copy')
+      this.$toast.info('URL copiada!')
+      this.showImgModal = false
+    },
+    deleteImage(image) {
+      const urlSplit = image.split('/')
+      const imageId = urlSplit[urlSplit.length - 1]
+      this.images.forEach((img, i, obj) => {
+        if (imageId === img) {
+          obj.splice(i, 1)
+        }
+      })
+      this.$store.dispatch('image/delete', {
+        item: {
+          _id: imageId
+        },
+        onSuccess: () => {
+          this.showImgModal = false
+          this.file = null
+          this.save()
+        }
+      })
     }
   }
 }

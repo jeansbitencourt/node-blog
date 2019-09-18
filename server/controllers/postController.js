@@ -28,6 +28,7 @@ module.exports.select = function(app, req, res) {
     .populate('categories')
     .populate('images')
     .populate('createdBy', 'name _id userName')
+    .populate('logs.user', 'name _id userName')
     .exec(function (err, post) {
       if (err) {
         res.status(400).json(err)
@@ -47,7 +48,14 @@ module.exports.insert = function(app, req, res) {
       post.createdBy = user
       post.save(function(err, newPost) {
         if (err) res.status(400).json(err)
-        res.status(200).json(newPost)
+        newPost
+          .populate('categories')
+          .populate('images')
+          .populate('logs.user', 'name _id userName')
+          .populate('createdBy', 'name _id userName', function(err, postPopulate) {
+            if (err) res.status(400).json(err)
+            res.status(200).json(postPopulate)
+          })
       })
     } else {
       res.status(400).json({ post: 'failed on insert' })
@@ -69,11 +77,15 @@ module.exports.update = function(app, req, res) {
           { _id: req.body._id },
           newPost,
           { new: true },
-          function (err, postUpdate) {
-            if (err) res.status(400).json(err)
-            res.json(postUpdate)
-          }
         )
+        .populate('categories')
+        .populate('images')
+        .populate('createdBy', 'name _id userName')
+        .populate('logs.user', 'name _id userName')
+        .exec(function (err, postUpdate) {
+          if (err) res.status(400).json(err)
+          res.json(postUpdate)
+        })
       })
     } else {
       res.status(400).json({ post: 'failed on update' })
@@ -88,7 +100,7 @@ module.exports.delete = function(app, req, res) {
       if (err) res.status(400).json(err)
       if (post.deleted) {
         if (user && (user.permissions.isAdmin)) {
-          app.server.models.post.remove({ _id: req.params.id }, function(err) {
+          app.server.models.post.deleteOne({ _id: req.params.id }, function(err) {
             if (err) res.status(400).json(err)
             res.json({ post: 'successfully removed' })
           })
@@ -98,6 +110,7 @@ module.exports.delete = function(app, req, res) {
       } else {
         if (user && (user.permissions.isAdmin || user.permissions.createPosts)) {
           post.deleted = true
+          post.published = false
           post.logs.push(newLog(user, 'Exclusão da postagem'))
           app.server.models.post.findOneAndUpdate(
             { _id: req.params.id },

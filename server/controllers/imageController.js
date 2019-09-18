@@ -27,8 +27,12 @@ module.exports.selectData = function(app, req, res) {
     if (err) {
       res.status(400).json(err)
     } else {
-      res.contentType(image.contentType)
-      res.send(image.data)
+      if (image){ 
+        res.contentType(image.contentType)
+        res.send(image.data)
+      } else {
+        res.status(404).json({ image: 'not found' })
+      }
     }
   })
 }
@@ -39,14 +43,16 @@ module.exports.insert = function(app, req, res) {
   app.server.models.user.findById(req.body.userId, function(err, user) {
     if (err) res.status(400).json(err)
     if (user && (user.permissions.isAdmin || user.permissions.createPosts)) {
-      console.log(req.files)
-      fs.readFile(req.files.file.path, function(err, data) {
+      fs.readFile(req.file.path, function(err, data) {
         if (err) res.status(400).json(err)
         if (data) {
           image.name = req.body.name
           image.data = data
           image.contentType = 'image/png'
           image.save(function(err, newImage) {
+            fs.unlink(req.file.path, (err) => {
+              if (err) res.status(400).json(err)
+            })
             if (err) res.status(400).json(err)
             res.json(newImage)
           })
