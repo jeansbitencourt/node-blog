@@ -9,6 +9,7 @@ module.exports.list = function(app, req, res) {
   app.server.models.post
     .find({})
     .populate('categories')
+    .populate('coverImage')
     .populate('images')
     .populate('createdBy', 'name _id userName')
     .populate('logs.user', 'name _id userName')
@@ -26,6 +27,7 @@ module.exports.select = function(app, req, res) {
   app.server.models.post
     .findById(id)
     .populate('categories')
+    .populate('coverImage')
     .populate('images')
     .populate('createdBy', 'name _id userName')
     .populate('logs.user', 'name _id userName')
@@ -50,6 +52,7 @@ module.exports.insert = function(app, req, res) {
         if (err) res.status(400).json(err)
         newPost
           .populate('categories')
+          .populate('coverImage')
           .populate('images')
           .populate('logs.user', 'name _id userName')
           .populate('createdBy', 'name _id userName', function(err, postPopulate) {
@@ -79,6 +82,7 @@ module.exports.update = function(app, req, res) {
           { new: true },
         )
         .populate('categories')
+        .populate('coverImage')
         .populate('images')
         .populate('createdBy', 'name _id userName')
         .populate('logs.user', 'name _id userName')

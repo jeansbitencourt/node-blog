@@ -83,6 +83,10 @@ module.exports = function(app) {
       text: {
         type: String
       },
+      coverImage: {
+        type: Schema.Types.ObjectId,
+        ref: 'Image'
+      },
       images: [
         {
           type: Schema.Types.ObjectId,

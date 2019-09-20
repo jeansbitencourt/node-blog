@@ -89,6 +89,7 @@
                   @click.stop="
                     showImgModal = true
                     imgModal = '/api/images/data/' + image
+                    imgSelected = image
                   "
                   class="img"
                 />
@@ -111,6 +112,13 @@
             <v-btn color="red" @click="deleteImage(imgModal)">
               Excluir
             </v-btn>
+            <v-btn
+              color="blue"
+              @click="setCoverImage()"
+              v-if="imgSelected !== coverImage"
+            >
+              Definir como capa
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -124,6 +132,9 @@
 }
 .trumbowyg-button-pane {
   z-index: 3 !important;
+}
+button.trumbowyg-fullscreen-button {
+  display: none !important;
 }
 .img {
   cursor: pointer;
@@ -156,6 +167,7 @@ export default {
     return {
       showImgModal: false,
       imgModal: null,
+      imgSelected: null,
       id: this.$route.params.id,
       config: {
         disabled: false
@@ -175,16 +187,19 @@ export default {
       keywords: null,
       text: null,
       file: null,
-      images: []
+      images: [],
+      coverImage: null
     }
   },
   methods: {
     initialize(reloadLinks) {
       this.$store.dispatch('category/getList')
     },
+
     back() {
       this.$router.back()
     },
+
     save() {
       if (!this.title || !this.categories || !this.keywords || !this.text) {
         this.$toast.error('Erro ao salvar! Preencha todos os campos!')
@@ -197,7 +212,8 @@ export default {
             keywords: this.keywords,
             published: this.published,
             text: this.text,
-            images: this.images
+            images: this.images,
+            coverImage: this.coverImage
           })
           .then(() => {
             this.getPostData()
@@ -210,13 +226,15 @@ export default {
             keywords: this.keywords,
             published: this.published,
             text: this.text,
-            images: this.images
+            images: this.images,
+            coverImage: this.coverImage
           })
           .then(() => {
             this.getPostData()
           })
       }
     },
+
     getPostData() {
       const post = this.getPost
       if (post) {
@@ -230,6 +248,7 @@ export default {
         post.images.forEach((image) => {
           this.images.push(image._id)
         })
+        this.coverImage = post.coverImage ? post.coverImage._id : null
       } else {
         this.$toast.error('Erro 404, postagem não encontrada')
         setTimeout(() => {
@@ -237,6 +256,7 @@ export default {
         }, 4000)
       }
     },
+
     onFileChange(file) {
       if (file) {
         if (file.type.substring(0, 5) === 'image') {
@@ -249,6 +269,7 @@ export default {
         this.file = null
       }
     },
+
     onFileUpload() {
       if (this.file) {
         this.$toast.info('Enviando o arquivo ' + this.file.name)
@@ -261,6 +282,7 @@ export default {
         this.$toast.error('Erro ao enviar! Selecione um arquivo de imagem!')
       }
     },
+
     copyUrl() {
       const input = document.getElementById('inputUrlImg')
       input.select()
@@ -269,24 +291,29 @@ export default {
       this.$toast.info('URL copiada!')
       this.showImgModal = false
     },
+
     deleteImage(image) {
-      const urlSplit = image.split('/')
-      const imageId = urlSplit[urlSplit.length - 1]
-      this.images.forEach((img, i, obj) => {
-        if (imageId === img) {
-          obj.splice(i, 1)
-        }
-      })
       this.$store.dispatch('image/delete', {
         item: {
-          _id: imageId
+          _id: this.imgSelected
         },
         onSuccess: () => {
+          this.images.forEach((img, i, obj) => {
+            if (this.imgSelected === img) {
+              obj.splice(i, 1)
+            }
+          })
           this.showImgModal = false
           this.file = null
           this.save()
         }
       })
+    },
+
+    setCoverImage() {
+      this.$toast.info('Nova imagem de capa definida!')
+      this.showImgModal = false
+      this.coverImage = this.imgSelected
     }
   }
 }

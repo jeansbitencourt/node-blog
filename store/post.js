@@ -38,6 +38,9 @@ export const actions = {
       })
   },
   async create({ dispatch, commit }, post) {
+    if (!post.coverImage) {
+      delete post.coverImage
+    }
     await this.$axios
       .post('posts', post)
       .then((res) => {
@@ -65,6 +68,9 @@ export const actions = {
       })
   },
   async save({ dispatch, commit }, post) {
+    if (!post.coverImage) {
+      delete post.coverImage
+    }
     await this.$axios
       .put('posts', post)
       .then((res) => {

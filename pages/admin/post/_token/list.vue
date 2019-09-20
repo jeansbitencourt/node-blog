@@ -29,8 +29,11 @@
         <v-icon small class="mr-2" @click="editItem(item)">
           edit
         </v-icon>
-        <v-icon small @click="deleteItem(item)">
+        <v-icon small class="mr-2" @click="deleteItem(item)">
           delete
+        </v-icon>
+        <v-icon small @click="seeItem(item)">
+          visibility
         </v-icon>
       </template>
       <template v-slot:no-data>
@@ -147,6 +150,10 @@ export default {
           this.initialize()
         }
       })
+    },
+
+    seeItem(item) {
+      // this.$router.push('/admin/post/' + this.userToken + '/' + item._id)
     },
 
     dateToStr(date) {
