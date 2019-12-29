@@ -36,16 +36,7 @@
         />
       </nuxt-link>
       <v-spacer />
-      <v-toolbar-title>
-        <v-text-field
-          v-model="search"
-          append-icon="search"
-          label="Buscar"
-          single-line
-          hide-details
-          style="margin-bottom: 0.8em"
-        />
-      </v-toolbar-title>
+      <SearchBar v-if="searchTopBar" />
       <v-btn
         icon
         style="margin-left:3em"
@@ -79,6 +70,7 @@
 
 <script>
 import RightBar from '~/components/RightBar.vue'
+import SearchBar from '~/components/SearchBar.vue'
 function isMobile() {
   return (
     typeof window.orientation !== 'undefined' ||
@@ -87,12 +79,14 @@ function isMobile() {
 }
 export default {
   components: {
-    RightBar
+    RightBar,
+    SearchBar
   },
   data() {
     return {
       clipped: true,
       drawer: true,
+      searchTopBar: true,
       fixed: true,
       miniVariant: false,
       rightDrawer: false,
@@ -109,9 +103,7 @@ export default {
     }
   },
   created() {
-    if (process.client && isMobile()) {
-      this.drawer = false
-    }
+    this.changeToMobile()
   },
   mounted() {
     const cookieTk = this.$cookie.get('tkUser')
@@ -123,6 +115,12 @@ export default {
   methods: {
     ucFirst(word) {
       return word.charAt(0).toUpperCase() + word.slice(1)
+    },
+    changeToMobile() {
+      if (process.client && isMobile()) {
+        this.drawer = false
+        this.searchTopBar = false
+      }
     }
   },
   head() {

@@ -15,24 +15,22 @@ module.exports = function(app) {
   const Image = app.server.models.image
   const User = app.server.models.user
 
-  const Log = new Schema(
-    {
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-      },
-      date: {
-        type: Date,
-        max: Date.now,
-        default: Date.now
-      },
-      action: {
-        type: String,
-        required: true
-      }
+  const Log = new Schema({
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    date: {
+      type: Date,
+      max: Date.now,
+      default: Date.now
+    },
+    action: {
+      type: String,
+      required: true
     }
-  )
+  })
 
   const Post = new Schema(
     {
@@ -93,9 +91,7 @@ module.exports = function(app) {
           ref: 'Image'
         }
       ],
-      logs: [
-        Log
-      ]
+      logs: [Log]
     },
     {
       collection: 'posts'
@@ -104,8 +100,8 @@ module.exports = function(app) {
 
   Post.pre('save', function (next) {
     this.slug = defaultUrl(this.get('title'))
-    next();
-  });
+    next()
+  })
 
   return mongoose.model('Post', Post)
 }

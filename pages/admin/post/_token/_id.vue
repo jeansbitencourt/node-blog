@@ -11,8 +11,12 @@
                 </v-toolbar-title>
               </v-flex>
               <v-flex md4 text-right>
-                <v-btn @click="save" color="primary">Salvar</v-btn>
-                <v-btn @click="back" color="red" class="ml-3">Cancelar</v-btn>
+                <v-btn color="primary" @click="save">
+                  Salvar
+                </v-btn>
+                <v-btn color="red" class="ml-3" @click="back">
+                  Cancelar
+                </v-btn>
               </v-flex>
             </v-layout>
             <v-spacer />
@@ -67,13 +71,13 @@
             <v-layout>
               <v-flex md4>
                 <v-file-input
-                  @change="onFileChange"
                   chips
                   show-size
                   :rules="fileRules"
                   label="Enviar imagem"
                   prepend-icon="mdi-camera"
                   accept="image/png, image/jpeg, image/bmp, image/gif"
+                  @change="onFileChange"
                 />
               </v-flex>
               <v-flex md2 pl-5 pt-3>
@@ -81,17 +85,17 @@
                   Enviar imagem
                 </v-btn>
               </v-flex>
-              <v-flex md2 v-for="(image, i) in images" :key="i">
+              <v-flex v-for="(image, i) in images" :key="i" md2>
                 <v-img
                   :src="'/api/images/data/' + image"
                   aspect-ratio="1.7"
                   contain
+                  class="img"
                   @click.stop="
                     showImgModal = true
                     imgModal = '/api/images/data/' + image
                     imgSelected = image
                   "
-                  class="img"
                 />
               </v-flex>
             </v-layout>
@@ -103,19 +107,19 @@
           <v-card-actions>
             <v-img :src="imgModal" aspect-ratio="2" contain />
             <v-text-field
+              id="inputUrlImg"
               :value="imgModal"
               label="URL da imagem"
-              @click="copyUrl"
-              id="inputUrlImg"
               readonly
+              @click="copyUrl"
             />
             <v-btn color="red" @click="deleteImage(imgModal)">
               Excluir
             </v-btn>
             <v-btn
+              v-if="imgSelected !== coverImage"
               color="blue"
               @click="setCoverImage()"
-              v-if="imgSelected !== coverImage"
             >
               Definir como capa
             </v-btn>
@@ -144,25 +148,6 @@ button.trumbowyg-fullscreen-button {
 <script>
 export default {
   middleware: 'isAuthor',
-  mounted() {
-    this.initialize()
-    if (this.id) {
-      this.$store.dispatch('post/getPost', this.id).then(() => {
-        this.getPostData()
-      })
-    }
-  },
-  computed: {
-    categoriesList() {
-      return this.$store.state.category.list
-    },
-    getPost() {
-      return this.$store.state.post.post
-    },
-    getImage() {
-      return this.$store.state.image.image
-    }
-  },
   data() {
     return {
       showImgModal: false,
@@ -189,6 +174,25 @@ export default {
       file: null,
       images: [],
       coverImage: null
+    }
+  },
+  computed: {
+    categoriesList() {
+      return this.$store.state.category.list
+    },
+    getPost() {
+      return this.$store.state.post.post
+    },
+    getImage() {
+      return this.$store.state.image.image
+    }
+  },
+  mounted() {
+    this.initialize()
+    if (this.id) {
+      this.$store.dispatch('post/getPost', this.id).then(() => {
+        this.getPostData()
+      })
     }
   },
   methods: {

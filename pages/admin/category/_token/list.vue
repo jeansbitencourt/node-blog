@@ -10,7 +10,7 @@
         <v-toolbar flat>
           <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
           <v-divider class="mx-4" inset vertical />
-          <div class="flex-grow-1"></div>
+          <div class="flex-grow-1" />
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
               <v-btn color="primary" dark class="mb-2" v-on="on">
@@ -54,11 +54,13 @@
               </v-card-text>
 
               <v-card-actions>
-                <div class="flex-grow-1"></div>
+                <div class="flex-grow-1" />
                 <v-btn color="red" @click="close">
                   Cancelar
                 </v-btn>
-                <v-btn color="primary" @click="save">Salvar</v-btn>
+                <v-btn color="primary" @click="save">
+                  Salvar
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -94,17 +96,6 @@
 import utils from '~/assets/js/utils'
 export default {
   middleware: 'isAdmin',
-  computed: {
-    items() {
-      return this.$store.state.category.list
-    },
-    formTitle() {
-      return this.editedIndex === -1 ? 'Novo item' : 'Editar item'
-    }
-  },
-  created() {
-    this.initialize(false)
-  },
   data() {
     return {
       pageTitle: 'Lista de categorias',
@@ -144,6 +135,22 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    items() {
+      return this.$store.state.category.list
+    },
+    formTitle() {
+      return this.editedIndex === -1 ? 'Novo item' : 'Editar item'
+    }
+  },
+  watch: {
+    dialog(val) {
+      val || this.close()
+    }
+  },
+  created() {
+    this.initialize(false)
   },
   methods: {
     initialize(reloadLinks) {
@@ -191,11 +198,6 @@ export default {
 
     dateToStr(date) {
       return utils.dateToStr(date)
-    }
-  },
-  watch: {
-    dialog(val) {
-      val || this.close()
     }
   }
 }

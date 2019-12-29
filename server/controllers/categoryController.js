@@ -42,13 +42,15 @@ module.exports.update = function(app, req, res) {
     if (err) res.status(400).json(err)
     if (user && user.permissions.isAdmin) {
       const newCategory = req.body
-      app.server.models.category.findOneAndUpdate({
+      app.server.models.category.findOneAndUpdate(
+        {
           _id: req.body._id
         },
-        newCategory, {
+        newCategory,
+        {
           new: true
         },
-        function(err, categoryUpdate) {
+        function (err, categoryUpdate) {
           if (err) res.status(400).json(err)
           res.json(categoryUpdate)
         }
@@ -65,7 +67,9 @@ module.exports.delete = function(app, req, res) {
   app.server.models.user.findById(req.body.userId, function(err, user) {
     if (err) res.status(400).json(err)
     if (user && user.permissions.isAdmin) {
-      app.server.models.category.findByIdAndRemove(req.params.id, function(err) {
+      app.server.models.category.findByIdAndRemove(req.params.id, function(
+        err
+      ) {
         if (err) res.status(400).json(err)
         res.json({
           category: 'successfully removed'

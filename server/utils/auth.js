@@ -12,7 +12,11 @@ module.exports.verifyJWT = function(req, res, next) {
 
   jwt.verify(token, process.env.SECRET, function(err, decoded) {
     const now = Date.now().valueOf() / 1000
-    if (typeof decoded !== 'undefined' && typeof decoded.exp !== 'undefined' && decoded.exp < now) {
+    if (
+      typeof decoded !== 'undefined' &&
+      typeof decoded.exp !== 'undefined' &&
+      decoded.exp < now
+    ) {
       return res.status(401).send({
         auth: false,
         message: 'Token expired.'
@@ -52,4 +56,3 @@ module.exports.getNewAuth = function(user, req, res) {
     user: us
   })
 }
-

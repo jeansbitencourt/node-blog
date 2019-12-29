@@ -9,15 +9,20 @@
           @keyup.enter="requestFocus"
         />
         <v-text-field
+          ref="password"
           v-model="password"
           :type="'password'"
           label="Senha"
-          ref="password"
           @keyup.enter="login"
         />
       </v-card-title>
-      <v-card-actions>
-        <v-btn color="primary" @click="login">Entrar</v-btn>
+      <v-card-actions class="justify-center">
+        <v-btn color="primary" @click="login">
+          Entrar
+        </v-btn>
+        <v-btn color="primary" to="createAccount">
+          Criar conta
+        </v-btn>
       </v-card-actions>
     </v-card>
     <v-card v-if="user.name">
@@ -30,17 +35,22 @@
         </v-chip>
       </v-card-title>
       <v-card-actions>
-        <v-btn block color="error" @click="logout">Sair</v-btn>
+        <v-btn block color="error" @click="logout">
+          Sair
+        </v-btn>
       </v-card-actions>
       <v-card-actions>
-        <v-btn block color="primary">Perfil</v-btn>
+        <v-btn block color="primary">
+          Perfil
+        </v-btn>
       </v-card-actions>
       <v-card-actions v-if="user.permissions.createPosts">
         <v-btn
           block
           color="primary"
           :to="'/admin/post/' + this.$store.state.login.userToken + '/list'"
-          >Postagens
+        >
+          Postagens
         </v-btn>
       </v-card-actions>
       <v-card-actions v-if="user.permissions.isAdmin">
@@ -48,7 +58,8 @@
           block
           color="primary"
           :to="'/admin/category/' + this.$store.state.login.userToken + '/list'"
-          >Categorias
+        >
+          Categorias
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -61,15 +72,15 @@
 <script>
 import Swal from 'sweetalert2'
 export default {
+  props: {
+    user: {},
+    rightDrawer: Boolean
+  },
   data() {
     return {
       username: '',
       password: ''
     }
-  },
-  props: {
-    user: {},
-    rightDrawer: Boolean
   },
   computed: {
     show: {
@@ -87,6 +98,22 @@ export default {
       set(value) {
         this.$store.commit('login/setLoginError', null)
       }
+    }
+  },
+  mounted() {
+    const login = window.location.search.split('logout=')[1]
+    if (login) {
+      Swal.fire({
+        title: 'Oops',
+        text: 'Sua sessão expirou!',
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      }).then((result) => {
+        this.$store.dispatch('login/logout', {
+          cookie: this.$cookie,
+          router: this.$router
+        })
+      })
     }
   },
   methods: {
@@ -123,22 +150,6 @@ export default {
     },
     requestFocus() {
       this.$refs.password.focus()
-    }
-  },
-  mounted() {
-    const login = window.location.search.split('logout=')[1]
-    if (login) {
-      Swal.fire({
-        title: 'Oops',
-        text: 'Sua sessão expirou!',
-        type: 'warning',
-        confirmButtonText: 'Ok'
-      }).then((result) => {
-        this.$store.dispatch('login/logout', {
-          cookie: this.$cookie,
-          router: this.$router
-        })
-      })
     }
   }
 }

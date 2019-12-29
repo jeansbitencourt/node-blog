@@ -134,4 +134,3 @@ module.exports.selectThisUser = function (app, req, res) {
     }
   })
 }
-

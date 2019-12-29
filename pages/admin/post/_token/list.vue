@@ -11,15 +11,16 @@
         <v-toolbar flat>
           <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
           <v-divider class="mx-4" inset vertical />
-          <div class="flex-grow-1"></div>
+          <div class="flex-grow-1" />
           <v-dialog max-width="500px">
             <template v-slot:activator="{ on }">
               <v-btn
                 color="primary"
                 class="mb-2"
-                v-on="on"
                 :to="'/admin/post/' + userToken"
-                >Nova postagem
+                v-on="on"
+              >
+                Nova postagem
               </v-btn>
             </template>
           </v-dialog>
@@ -46,21 +47,19 @@
         {{ item.published ? 'Publicado' : 'Não publicado' }}
       </template>
       <template v-slot:item.categories="{ item }">
-        <v-chip
-          class="ml-1"
-          v-for="(category, i) in item.categories"
-          :key="i"
-          >{{ category.name }}</v-chip
-        >
+        <v-chip v-for="(category, i) in item.categories" :key="i" class="ml-1">
+          {{ category.name }}
+        </v-chip>
       </template>
       <template v-slot:item.keywords="{ item }">
         <v-chip
-          small
-          class="ml-1"
           v-for="(keyword, i) in item.keywords"
           :key="i"
-          >{{ keyword }}</v-chip
+          small
+          class="ml-1"
         >
+          {{ keyword }}
+        </v-chip>
       </template>
       <template v-slot:item.creationDate="{ item }">
         {{ dateToStr(item.creationDate) }}
@@ -76,17 +75,6 @@
 import utils from '~/assets/js/utils'
 export default {
   middleware: 'isAuthor',
-  computed: {
-    items() {
-      return this.$store.state.post.list
-    },
-    userToken() {
-      return this.$store.state.login.userToken
-    }
-  },
-  created() {
-    this.initialize()
-  },
   data() {
     return {
       pageTitle: 'Lista de postagens',
@@ -133,6 +121,17 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    items() {
+      return this.$store.state.post.list
+    },
+    userToken() {
+      return this.$store.state.login.userToken
+    }
+  },
+  created() {
+    this.initialize()
   },
   methods: {
     initialize() {

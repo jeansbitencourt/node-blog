@@ -1,5 +1,5 @@
 const colors = require('vuetify/es5/util/colors').default
-const webpack = require("webpack");
+const webpack = require('webpack')
 
 module.exports = {
   mode: 'universal',
@@ -101,7 +101,7 @@ module.exports = {
       new webpack.ProvidePlugin({
         jQuery: 'jquery',
         $: 'jquery',
-        'window.jQuery': 'jquery',
+        'window.jQuery': 'jquery'
       })
     ],
     extend(config, ctx) {}

@@ -26,13 +26,11 @@ module.exports.selectData = function(app, req, res) {
   app.server.models.image.findById(id, function(err, image) {
     if (err) {
       res.status(400).json(err)
+    } else if (image) {
+      res.contentType(image.contentType)
+      res.send(image.data)
     } else {
-      if (image){ 
-        res.contentType(image.contentType)
-        res.send(image.data)
-      } else {
-        res.status(404).json({ image: 'not found' })
-      }
+      res.status(404).json({ image: 'not found' })
     }
   })
 }
