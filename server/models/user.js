@@ -1,33 +1,35 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const uniqueValidator = require('mongoose-unique-validator')
 
 const User = new Schema(
   {
     name: {
       firstName: {
         type: String,
-        required: true
+        required: 'Nome é obrigatório!'
       },
       lastName: {
         type: String,
-        required: true
+        required: 'Sobrenome é obrigatório!'
       }
     },
     userName: {
       type: String,
       lowercase: true,
       trim: true,
-      required: true,
+      required: 'Nome de usuário é obrigatório!',
       unique: true,
       index: true,
-      minlength: 4
+      minlength: [4, 'Nome de usuário precisa ter no mínimo 4 caracteres!'],
     },
     email: {
       type: String,
       lowercase: true,
       trim: true,
-      required: true,
-      unique: true
+      required: 'Endereço de email é obrigatório!',
+      unique: true,
+      match: [/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/, 'Email informado é inválido!']
     },
     password: {
       type: String,
@@ -75,6 +77,8 @@ const User = new Schema(
     collection: 'users'
   }
 )
+
+User.plugin(uniqueValidator, { message: 'O {PATH} {VALUE} já foi utilizado por outro usuário!' })
 
 module.exports = function() {
   return mongoose.model('User', User)

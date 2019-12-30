@@ -5,15 +5,15 @@ const Image = new Schema(
   {
     name: {
       type: String,
-      required: true
+      required: 'Nome da imagem obrigatório!'
     },
     data: {
       type: Buffer,
-      required: true
+      required: 'Conteúdo da imagem obrigatório!'
     },
     contentType: {
       type: String,
-      required: true
+      required: 'Formato da imagem obrigatório!'
     },
     uploadDate: {
       type: Date,

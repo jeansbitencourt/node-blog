@@ -19,7 +19,7 @@ module.exports = function(app) {
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true
+      required: 'Usuário obrigatório!'
     },
     date: {
       type: Date,
@@ -28,7 +28,7 @@ module.exports = function(app) {
     },
     action: {
       type: String,
-      required: true
+      required: 'Ação obrigatória!'
     }
   })
 
@@ -36,7 +36,7 @@ module.exports = function(app) {
     {
       title: {
         type: String,
-        required: true,
+        required: 'Título obrigatório!',
         unique: true
       },
       deleted: {
@@ -45,7 +45,7 @@ module.exports = function(app) {
       },
       published: {
         type: Boolean,
-        required: true,
+        required: 'Status de publicação obrigatória!',
         default: false
       },
       keywords: [
@@ -70,7 +70,7 @@ module.exports = function(app) {
       createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: 'Usuário que criou obrigatório!'
       },
       categories: [
         {

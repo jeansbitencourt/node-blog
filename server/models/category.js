@@ -1,16 +1,17 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const uniqueValidator = require('mongoose-unique-validator')
 
 const Category = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: 'Nome obrigatório!',
       unique: true
     },
     description: {
       type: String,
-      required: true
+      required: 'Descrição obrigatória!'
     },
     icon: {
       type: String
@@ -25,6 +26,8 @@ const Category = new Schema(
     collection: 'categories'
   }
 )
+
+Category.plugin(uniqueValidator, { message: 'O {PATH} {VALUE} já existe!' })
 
 module.exports = function() {
   return mongoose.model('Category', Category)

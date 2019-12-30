@@ -45,7 +45,12 @@ module.exports.insert = function (app, req, res) {
         user.password = hash
         user.save(function(err, newUser) {
           if (err) res.status(400).json(err)
-          res.status(200).json(newUser)
+          let us 
+          if (newUser) {
+            us = JSON.parse(JSON.stringify(newUser))
+            delete us.password
+          }
+          res.status(200).json(us)
         })
       }
     })

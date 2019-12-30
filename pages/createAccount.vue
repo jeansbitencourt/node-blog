@@ -30,6 +30,7 @@
                 label="Nome de usuário"
                 prepend-icon="person"
                 type="text"
+                @keyup="lowerCaseUserName()"
               />
 
               <v-text-field
@@ -90,8 +91,8 @@ export default {
         this.email
       ) {
         if (this.password === this.passwordConfirm) {
-          this.$store
-            .dispatch('user/create', {
+          this.$store.dispatch('user/create', {
+            user: {
               name: {
                 firstName: this.firstName,
                 lastName: this.lastName
@@ -99,13 +100,14 @@ export default {
               userName: this.userName,
               email: this.email,
               password: this.password
-            })
-            .then(() => {
+            },
+            onSuccess: () => {
               this.$toast.success(
-                'Conta criada com sucesso! Redirencionando para página inicial...'
+                'Usuário cadastrado! Redirencionando para página inicial...'
               )
               this.$router.push('/')
-            })
+            }
+          })
         } else {
           this.$toast.error(
             'Erro ao criar conta. Senha e confirmação de senha não correspondem'
@@ -116,6 +118,9 @@ export default {
           'Erro ao criar conta. Verifique se todos os campos estão preenchidos e tente novamente!'
         )
       }
+    },
+    lowerCaseUserName() {
+      this.userName = this.userName ? this.userName.toLowerCase() : null
     }
   }
 }

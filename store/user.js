@@ -22,22 +22,22 @@ export const actions = {
         /* eslint-enable no-console */
       })
   },
-  async create({ dispatch }, user) {
+  async create({ dispatch }, data) {
     await this.$axios
-      .post('users', user)
+      .post('users', data.user)
       .then((res) => {
         if (res.status === 200) {
-          console.log(res.data)
           dispatch(
             'alert',
             {
-              msg: 'Usuário criado com sucesso!',
+              msg: `Usuário ${res.data.userName} criado com sucesso!`,
               type: 'success'
             },
             {
               root: true
             }
           )
+          data.onSuccess()
         } else {
           throw new Error('Erro ao criar usuário! (status ' + res.status + ')')
         }
