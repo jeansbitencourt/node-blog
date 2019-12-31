@@ -2,6 +2,10 @@ module.exports = function(app) {
   app.get('/api/posts', function(req, res, next) {
     app.server.controllers.postController.list(app, req, res)
   })
+  
+  app.get('/api/posts/slug/:slug', function(req, res, rext) {
+    app.server.controllers.postController.selectBySlug(app, req, res)
+  })
 
   app.get('/api/posts/:id', function(req, res, next) {
     app.server.controllers.postController.select(app, req, res)

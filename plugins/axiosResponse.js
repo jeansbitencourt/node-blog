@@ -13,11 +13,8 @@ export default ({ $axios, store, router, cookie }) => {
       } else if (error.response.status !== 200 && process.client) {
         store.dispatch('alert', {
           type: 'error',
-          msg:
-            'Erro, status ' +
-            error.response.status +
-            '! ' +
-            error.response.data.message
+          msg: `Erro, status ${error.response.status}!&nbsp;
+            ${error.response.data.message}`
         })
       }
       return Promise.reject(error)

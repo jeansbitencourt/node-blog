@@ -7,6 +7,7 @@
           v-model="username"
           label="Usuário"
           @keyup.enter="requestFocus"
+          @keyup="lowerCaseUserName"
         />
         <v-text-field
           ref="password"
@@ -101,8 +102,8 @@ export default {
     }
   },
   mounted() {
-    const login = window.location.search.split('logout=')[1]
-    if (login) {
+    const loginParams = window.location.search.split('logout=')
+    if (loginParams[1]) {
       Swal.fire({
         title: 'Oops',
         text: 'Sua sessão expirou!',
@@ -111,7 +112,8 @@ export default {
       }).then((result) => {
         this.$store.dispatch('login/logout', {
           cookie: this.$cookie,
-          router: this.$router
+          router: this.$router,
+          path: loginParams[0]
         })
       })
     }
@@ -150,6 +152,9 @@ export default {
     },
     requestFocus() {
       this.$refs.password.focus()
+    },
+    lowerCaseUserName() {
+      this.username = this.username ? this.username.toLowerCase() : null
     }
   }
 }

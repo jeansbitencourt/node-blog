@@ -6,6 +6,10 @@ const utils = {
       ' ' +
       new Date(date).toLocaleTimeString('pt-BR')
     )
+  },
+
+  getImageUrl(id) {
+    return '/api/images/data/' + id
   }
 }
 

@@ -58,6 +58,9 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
+            <v-btn color="red" to="/">
+              Cancelar
+            </v-btn>
             <v-btn color="primary" @click="createAccount">
               Criar nova conta
             </v-btn>

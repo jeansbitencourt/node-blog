@@ -152,7 +152,7 @@ export default {
     },
 
     seeItem(item) {
-      // this.$router.push('/admin/post/' + this.userToken + '/' + item._id)
+      this.$router.push('/post/' + item.slug)
     },
 
     dateToStr(date) {

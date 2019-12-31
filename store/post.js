@@ -37,6 +37,25 @@ export const actions = {
         /* eslint-enable no-console */
       })
   },
+  async getPostBySlug({ commit }, slug) {
+    await this.$axios
+      .get('posts/slug/' + slug)
+      .then((res) => {
+        if (res.status === 200) {
+          commit('setPost', res.data)
+        } else {
+          commit('setPost', null)
+          throw new Error(
+            'Erro ao buscar postagem! (status ' + res.status + ')'
+          )
+        }
+      })
+      .catch((e) => {
+        /* eslint-disable no-console */
+        console.log(e)
+        /* eslint-enable no-console */
+      })
+  },
   async create({ dispatch, commit }, post) {
     if (!post.coverImage) {
       delete post.coverImage

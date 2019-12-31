@@ -9,8 +9,8 @@ module.exports.list = function(app, req, res) {
   app.server.models.post
     .find({})
     .populate('categories')
-    .populate('coverImage')
-    .populate('images')
+    .populate('coverImage', 'name _id uploadDate')
+    .populate('images', 'name _id uploadDate')
     .populate('createdBy', 'name _id userName')
     .populate('logs.user', 'name _id userName')
     .exec(function(err, posts) {
@@ -27,10 +27,27 @@ module.exports.select = function(app, req, res) {
   app.server.models.post
     .findById(id)
     .populate('categories')
-    .populate('coverImage')
-    .populate('images')
+    .populate('coverImage', 'name _id uploadDate')
+    .populate('images', 'name _id uploadDate')
     .populate('createdBy', 'name _id userName')
     .populate('logs.user', 'name _id userName')
+    .exec(function (err, post) {
+      if (err) {
+        res.status(400).json(err)
+      } else {
+        res.json(post)
+      }
+    })
+}
+
+module.exports.selectBySlug = function(app, req, res) {
+  const slug = req.params.slug
+  app.server.models.post
+    .findOne({slug: slug, deleted: false, published: true})
+    .populate('categories')
+    .populate('coverImage', 'name _id uploadDate')
+    .populate('images', 'name _id uploadDate')
+    .populate('createdBy', 'name _id userName')
     .exec(function (err, post) {
       if (err) {
         res.status(400).json(err)
@@ -52,8 +69,8 @@ module.exports.insert = function(app, req, res) {
         if (err) res.status(400).json(err)
         newPost
           .populate('categories')
-          .populate('coverImage')
-          .populate('images')
+          .populate('coverImage', 'name _id uploadDate')
+          .populate('images', 'name _id uploadDate')
           .populate('logs.user', 'name _id userName')
           .populate('createdBy', 'name _id userName', function(
             err,
@@ -82,8 +99,8 @@ module.exports.update = function(app, req, res) {
         app.server.models.post
           .findOneAndUpdate({ _id: req.body._id }, newPost, { new: true })
           .populate('categories')
-          .populate('coverImage')
-          .populate('images')
+          .populate('coverImage', 'name _id uploadDate')
+          .populate('images', 'name _id uploadDate')
           .populate('createdBy', 'name _id userName')
           .populate('logs.user', 'name _id userName')
           .exec(function(err, postUpdate) {

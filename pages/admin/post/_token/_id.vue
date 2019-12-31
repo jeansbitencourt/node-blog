@@ -87,13 +87,13 @@
               </v-flex>
               <v-flex v-for="(image, i) in images" :key="i" md2>
                 <v-img
-                  :src="'/api/images/data/' + image"
+                  :src="getImageUrl(image)"
                   aspect-ratio="1.7"
                   contain
                   class="img"
                   @click.stop="
                     showImgModal = true
-                    imgModal = '/api/images/data/' + image
+                    imgModal = getImageUrl(image)
                     imgSelected = image
                   "
                 />
@@ -146,6 +146,7 @@ button.trumbowyg-fullscreen-button {
 </style>
 
 <script>
+import utils from '~/assets/js/utils'
 export default {
   middleware: 'isAuthor',
   data() {
@@ -318,6 +319,10 @@ export default {
       this.$toast.info('Nova imagem de capa definida!')
       this.showImgModal = false
       this.coverImage = this.imgSelected
+    },
+
+    getImageUrl(id) {
+      return utils.getImageUrl(id)
     }
   }
 }
