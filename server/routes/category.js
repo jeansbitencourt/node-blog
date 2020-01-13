@@ -1,14 +1,18 @@
 module.exports = function(app) {
+  app.get('/api/categories/slug/:slug', function(req, res, rext) {
+    app.server.controllers.categoryController.selectBySlug(app, req, res)
+  })
+
   app.get('/api/categories', function(req, res, next) {
     app.server.controllers.categoryController.list(app, req, res)
   })
 
-  app.get('/api/categories/:id', function(req, res, next) {
-    app.server.controllers.categoryController.select(app, req, res)
-  })
-
   app.use('/api/categories', function(req, res, next) {
     app.server.utils.auth.verifyJWT(req, res, next)
+  })
+
+  app.get('/api/categories/:id', function(req, res, next) {
+    app.server.controllers.categoryController.select(app, req, res)
   })
 
   app.post('/api/categories', function(req, res, next) {

@@ -21,7 +21,9 @@
           </strong>
         </span>
         <span>|</span>
-        <span class="dotted">Categorias: </span>
+        <span class="dotted">
+          {{ post.categories.length > 1 ? 'Categorias: ' : 'Categoria: ' }}
+        </span>
         <v-chip
           v-for="(category, i) in post.categories"
           :key="i"
@@ -36,13 +38,17 @@
     </v-row>
     <v-row justify="center">
       <v-col cols="12" sm="10" md="8">
-        <p v-html="post.text"></p>
+        <p v-html="post.text" />
       </v-col>
     </v-row>
     <v-row justify="center">
       <v-col cols="12" sm="10" md="8">
         <v-divider class="mb-2" />
-        <span class="dotted">Palavras-chave: </span>
+        <span class="dotted">
+          {{
+            post.keywords.length > 1 ? 'Palavras-chave: ' : 'Palavra-chave: '
+          }}
+        </span>
         <v-chip
           v-for="(keyword, i) in post.keywords"
           :key="i"

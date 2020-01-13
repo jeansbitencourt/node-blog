@@ -6,6 +6,11 @@ import 'trumbowyg/dist/ui/trumbowyg.css'
 import CodePrettify from 'code-prettify'
 import 'code-prettify/styles/sunburst.css'
 
+const WOW = require('wowjs')
+window.wow = new WOW.WOW({
+  live: false
+})
+
 Vue.use(Vuetify, {
   components: {
     VSnackbar

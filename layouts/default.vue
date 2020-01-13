@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -14,6 +14,9 @@
           :to="category.route"
           router
           exact
+          :title="category.description"
+          class="menu-item wow bounceInDown"
+          :data-wow-delay="(i > 9 ? '1.' + i : '0.' + i) + 's'"
         >
           <v-list-item-action>
             <v-icon>{{ category.icon }}</v-icon>
@@ -31,8 +34,8 @@
       </v-btn>
       <nuxt-link to="/" class="no-text-decoration">
         <v-toolbar-title
-          class="white--text"
-          v-text="blogName + (user.name ? ' - Olá ' + user.name.firstName : '')"
+          class="white--text blog-title wow bounceInDown"
+          v-text="blogName"
         />
       </nuxt-link>
       <v-spacer />
@@ -55,8 +58,10 @@
       :user="user"
       @chanceRightDrawer="rightDrawer = $event"
     />
-    <v-footer :fixed="fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }} - {{ blogName }}</span>
+    <v-footer class="justify-center mt-3" app inset absolute>
+      <span class="mr-auto">
+        &copy; {{ new Date().getFullYear() }} - {{ blogName }}
+      </span>
     </v-footer>
   </v-app>
 </template>
@@ -65,6 +70,19 @@
 .no-text-decoration {
   text-decoration: none;
   color: #fff;
+}
+.menu-item i.v-icon {
+  transition: all 1s;
+}
+.menu-item:hover i.v-icon {
+  transform: rotate(360deg);
+}
+.blog-title {
+  font-family: 'Audiowide', cursive;
+  font-size: 1.8rem !important;
+}
+.wow {
+  visibility: hidden;
 }
 </style>
 
@@ -87,7 +105,6 @@ export default {
       clipped: true,
       drawer: true,
       searchTopBar: true,
-      fixed: true,
       miniVariant: false,
       rightDrawer: false,
       blogName: this.$store.state.blogName,
@@ -106,6 +123,7 @@ export default {
     this.changeToMobile()
   },
   mounted() {
+    window.wow.init()
     const cookieTk = this.$cookie.get('tkUser')
     const cookieUser = this.$cookie.get('dtUser')
     if (cookieTk && cookieUser) {

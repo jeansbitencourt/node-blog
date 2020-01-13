@@ -99,7 +99,7 @@ module.exports = function(app) {
   )
 
   Post.pre('save', function (next) {
-    this.slug = defaultUrl(this.get('title'))
+    this.slug = defaultUrl(app.server.utils.functions.convertToSlug(this.get('title')))
     next()
   })
 

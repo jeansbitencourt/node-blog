@@ -21,7 +21,7 @@
         <v-btn color="primary" @click="login">
           Entrar
         </v-btn>
-        <v-btn color="primary" to="createAccount">
+        <v-btn color="primary" to="/createAccount">
           Criar conta
         </v-btn>
       </v-card-actions>
@@ -67,8 +67,26 @@
     <v-alert v-model="loginError" dismissible type="error">
       Erro ao realizar login! Verifique seu usuário e senha...
     </v-alert>
+    <v-card-actions class="justify-center">
+      <v-switch
+        class="bottom"
+        @change="changeTheme"
+        :v-model="blackTheme"
+        label="Tema escuro"
+        inset
+        color="primary"
+        input-value="true"
+      />
+    </v-card-actions>
   </v-navigation-drawer>
 </template>
+
+<style scoped>
+.bottom {
+  position: absolute;
+  bottom: 0;
+}
+</style>
 
 <script>
 import Swal from 'sweetalert2'
@@ -80,7 +98,8 @@ export default {
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      blackTheme: true
     }
   },
   computed: {
@@ -155,6 +174,20 @@ export default {
     },
     lowerCaseUserName() {
       this.username = this.username ? this.username.toLowerCase() : null
+    },
+    changeTheme() {
+      this.blackTheme = !this.blackTheme
+      this.$vuetify.theme.dark = this.blackTheme
+
+      const title = document.getElementsByClassName('blog-title')[0]
+
+      if (this.blackTheme) {
+        title.classList.add('white--text')
+        title.classList.remove('black--text')
+      } else {
+        title.classList.add('black--text')
+        title.classList.remove('white--text')
+      }
     }
   }
 }

@@ -2,20 +2,20 @@ const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
 module.exports = function(app) {
-  app.get('/api/images', function(req, res, next) {
-    app.server.controllers.imageController.list(app, req, res)
-  })
-
-  app.get('/api/images/:id', function(req, res, next) {
-    app.server.controllers.imageController.select(app, req, res)
-  })
-
   app.get('/api/images/data/:id', function(req, res, next) {
     app.server.controllers.imageController.selectData(app, req, res)
   })
 
   app.use('/api/images', upload.single('file'), function(req, res, next) {
     app.server.utils.auth.verifyJWT(req, res, next)
+  })
+
+  app.get('/api/images', function(req, res, next) {
+    app.server.controllers.imageController.list(app, req, res)
+  })
+
+  app.get('/api/images/:id', function(req, res, next) {
+    app.server.controllers.imageController.select(app, req, res)
   })
 
   app.post('/api/images', function(req, res, next) {

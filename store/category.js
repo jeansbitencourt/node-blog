@@ -1,10 +1,30 @@
 export const state = () => ({
   categories: [],
   list: [],
-  category: {}
+  category: {},
+  page: null
 })
 
 export const actions = {
+  async getCategory({ commit }, slug) {
+    await this.$axios
+      .get('categories/slug/' + slug)
+      .then((res) => {
+        if (res.status === 200) {
+          commit('setCategory', res.data)
+        } else {
+          commit('setCategory', null)
+          throw new Error(
+            'Erro ao buscar categoria! (status ' + res.status + ')'
+          )
+        }
+      })
+      .catch((e) => {
+        /* eslint-disable no-console */
+        console.log(e)
+        /* eslint-enable no-console */
+      })
+  },
   async loadLinks({ commit, dispatch }) {
     await this.$axios
       .get('categories')
@@ -135,17 +155,27 @@ export const mutations = {
     const links = []
     links.push({
       name: 'home',
-      description: 'HomePage',
+      description: 'Ir para a página inicial',
       icon: 'home',
       route: '/'
     })
     categories.forEach((category) => {
-      category.route = '/category/' + category.name.toLowerCase()
+      category.route = '/category/' + category.slug
       links.push(category)
     })
     state.categories = links
   },
   setList(state, posts) {
     state.list = posts
+  },
+  setCategory(state, category) {
+    state.category = {}
+    if (category.category) {
+      state.category = category.category
+      state.category.count = category.count
+    }
+  },
+  setPage(state, page) {
+    state.page = page
   }
 }

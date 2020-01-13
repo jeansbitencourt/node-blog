@@ -1,6 +1,6 @@
 export default ({ $axios, route, store, redirect }) => {
   if (
-    process.client &&
+    // process.client &&
     store.state.login.userToken &&
     !route.fullPath.includes('?logout=true')
   ) {

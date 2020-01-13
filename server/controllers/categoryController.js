@@ -19,6 +19,32 @@ module.exports.select = function(app, req, res) {
   })
 }
 
+module.exports.selectBySlug = function(app, req, res) {
+  const slug = req.params.slug
+  let json = {}
+  app.server.models.category
+    .findOne({slug: slug,})
+    .exec(function (err, category) {
+      if (err) {
+        res.status(400).json(err)
+      } else {
+        if (category) {
+          app.server.models.post.countDocuments({ categories: category.id }, function(err, count) {
+            if (err) {
+              res.status(400).json(err)
+            } else {
+              json.category = category
+              json.count = count
+              res.json(json)
+            }
+          })
+        } else {
+          res.json(category)
+        }
+      }
+    })
+}
+
 module.exports.insert = function(app, req, res) {
   const Category = app.server.models.category
   const category = new Category(req.body)

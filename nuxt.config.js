@@ -24,6 +24,10 @@ module.exports = {
         rel: 'stylesheet',
         href:
           'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'
+      },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css?family=Audiowide&display=swap'
       }
     ],
     script: [
@@ -51,7 +55,7 @@ module.exports = {
   plugins: [
     '~/plugins/vue-cookie',
     '~plugins/bootstrap.js',
-    { ssr: false, src: '~plugins/editor.js' },
+    { ssr: false, src: '~plugins/imports.js' },
     '~/plugins/axiosRequest',
     '~/plugins/axiosResponse'
   ],
@@ -76,12 +80,29 @@ module.exports = {
    */
   vuetify: {
     theme: {
+      disable: false,
       dark: true,
+      options: {
+        minifyTheme: function (css) {
+          return process.env.NODE_ENV === 'production'
+            ? css.replace(/[\r\n|\r|\n]/g, '')
+            : css
+        },
+      },
       themes: {
         dark: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
+          info: colors.teal.lighten1,
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3
+        },
+        light: {
+          primary: colors.blue.lighten2,
+          accent: colors.grey.lighten3,
+          secondary: colors.amber.lighten3,
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
@@ -97,6 +118,7 @@ module.exports = {
     /*
      ** You can extend webpack config here
      */
+    extractCSS: true,
     plugins: [
       new webpack.ProvidePlugin({
         jQuery: 'jquery',
