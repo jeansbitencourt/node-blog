@@ -117,14 +117,14 @@ module.exports.login = function (app, req, res) {
         } else {
           res.status(401).send({
             auth: false,
-            message: 'Authentication failed. Incorrect password!'
+            message: 'Falha na autenticação. Senha incorreta!'
           })
         }
       })
     } else {
       res.status(401).send({
         auth: false,
-        message: 'Authentication failed. User not found!'
+        message: 'Falha na autenticação. Usuário não encontrado!'
       })
     }
   })

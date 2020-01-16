@@ -10,55 +10,13 @@
         <img class="cover" :src="getImageUrl(post.coverImage._id)" />
       </v-col>
     </v-row>
-    <v-row justify="center">
-      <v-col cols="12" sm="10" md="8">
-        <span>Postado em {{ dateToStr(post.creationDate) }}</span>
-        <span>
-          por
-          <strong>
-            {{ post.createdBy.name.firstName }}
-            {{ post.createdBy.name.lastName }}
-          </strong>
-        </span>
-        <span>|</span>
-        <span class="dotted">
-          {{ post.categories.length > 1 ? 'Categorias: ' : 'Categoria: ' }}
-        </span>
-        <v-chip
-          v-for="(category, i) in post.categories"
-          :key="i"
-          small
-          class="ml-1"
-          :to="'/category/' + category.name.toLowerCase()"
-        >
-          {{ category.name }}
-        </v-chip>
-        <v-divider class="mt-2" />
-      </v-col>
-    </v-row>
+    <PostInfo :post="post" />
     <v-row justify="center">
       <v-col cols="12" sm="10" md="8">
         <p v-html="post.text" />
       </v-col>
     </v-row>
-    <v-row justify="center">
-      <v-col cols="12" sm="10" md="8">
-        <v-divider class="mb-2" />
-        <span class="dotted">
-          {{
-            post.keywords.length > 1 ? 'Palavras-chave: ' : 'Palavra-chave: '
-          }}
-        </span>
-        <v-chip
-          v-for="(keyword, i) in post.keywords"
-          :key="i"
-          small
-          class="ml-1"
-        >
-          {{ keyword }}
-        </v-chip>
-      </v-col>
-    </v-row>
+    <PostEnd :post="post" />
   </v-container>
 </template>
 
@@ -66,16 +24,18 @@
 img.cover {
   width: 100%;
 }
-.dotted {
-  text-decoration: underline;
-  text-decoration-style: dotted;
-}
 </style>
 
 <script>
 import utils from '~/assets/js/utils'
+import PostInfo from '~/components/PostInfo.vue'
+import PostEnd from '~/components/PostEnd.vue'
 export default {
   middleware: 'validateLogin',
+  components: {
+    PostInfo,
+    PostEnd
+  },
   computed: {
     post() {
       return this.$store.state.post.post
@@ -93,9 +53,6 @@ export default {
     }
   },
   methods: {
-    dateToStr(date) {
-      return utils.dateToStr(date)
-    },
     getImageUrl(id) {
       return utils.getImageUrl(id)
     }

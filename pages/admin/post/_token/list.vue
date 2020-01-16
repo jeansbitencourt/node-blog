@@ -22,6 +22,13 @@
               >
                 Nova postagem
               </v-btn>
+              <v-btn
+                color="secondary"
+                class="mb-2 mr-4"
+                v-if="user.permissions && user.permissions.isAdmin"
+              >
+                Ver postagens excluídas
+              </v-btn>
             </template>
           </v-dialog>
         </v-toolbar>
@@ -128,6 +135,9 @@ export default {
     },
     userToken() {
       return this.$store.state.login.userToken
+    },
+    user() {
+      return this.$store.state.login.userData
     }
   },
   created() {

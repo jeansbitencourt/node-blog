@@ -92,7 +92,7 @@
 import Swal from 'sweetalert2'
 export default {
   props: {
-    user: {},
+    user: Object,
     rightDrawer: Boolean
   },
   data() {

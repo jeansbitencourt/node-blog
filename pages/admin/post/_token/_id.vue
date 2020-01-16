@@ -143,6 +143,9 @@ button.trumbowyg-fullscreen-button {
 .img {
   cursor: pointer;
 }
+.trumbowyg-viewHTML-button svg {
+  fill: #000 !important;
+}
 </style>
 
 <script>

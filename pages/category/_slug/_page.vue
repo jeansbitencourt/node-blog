@@ -1,23 +1,41 @@
 <template>
-  <v-layout grid-list-md text-center v-if="category">
-    {{ category.slug }}
-    {{ postList }}
-    {{ page }}
-    {{ category.count }}
-    <div class="text-center">
-      <v-pagination
-        v-model="page"
-        :length="Math.ceil(category.count / 5)"
-        @input="onPageChange"
-      ></v-pagination>
-    </div>
+  <v-layout v-if="category" grid-list-md text-center>
+    <v-container>
+      <PostSummary v-for="(post, i) in postList" :key="i" :post="postList[i]" />
+      <v-row v-if="postList.length === 0">
+        <v-col cols="12" align="center">
+          <span>Não há postagens nessa categoria!</span>
+          <v-img
+            class="my-10"
+            src="/img/notfoundsearch.png"
+            lazy-src="/img/notfoundsearch.png"
+            width="200px"
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <div class="text-center">
+            <v-pagination
+              v-model="page"
+              :length="Math.ceil(category.count / 5)"
+              :total-visible="10"
+              @input="onPageChange"
+            />
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-layout>
 </template>
 
 <script>
-import utils from '~/assets/js/utils'
+import PostSummary from '~/components/PostSummary.vue'
 export default {
   middleware: 'validateLogin',
+  components: {
+    PostSummary
+  },
   data() {
     return {
       categorySlug: this.$route.params.slug
@@ -30,8 +48,13 @@ export default {
     postList() {
       return this.$store.state.post.list
     },
-    page() {
-      return this.$store.state.category.page
+    page: {
+      get() {
+        return this.$store.state.category.page
+      },
+      set(page) {
+        this.$store.commit('category/setPage', page)
+      }
     }
   },
   async fetch({ store, params }) {
@@ -65,9 +88,6 @@ export default {
   methods: {
     onPageChange(newPage) {
       this.$router.push(`/category/${this.category.slug}/${newPage}`)
-    },
-    getImageUrl(id) {
-      return utils.getImageUrl(id)
     }
   }
 }

@@ -8,7 +8,7 @@ import 'code-prettify/styles/sunburst.css'
 
 const WOW = require('wowjs')
 window.wow = new WOW.WOW({
-  live: false
+  live: true
 })
 
 Vue.use(Vuetify, {

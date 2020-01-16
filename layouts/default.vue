@@ -59,9 +59,11 @@
       @chanceRightDrawer="rightDrawer = $event"
     />
     <v-footer class="justify-center mt-3" app inset absolute>
-      <span class="mr-auto">
-        &copy; {{ new Date().getFullYear() }} - {{ blogName }}
-      </span>
+      <v-row justify="center" no-gutters>
+        <v-col class="text-left white--text" cols="12">
+          &copy; {{ new Date().getFullYear() }} - {{ blogName }}
+        </v-col>
+      </v-row>
     </v-footer>
   </v-app>
 </template>

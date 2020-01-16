@@ -10,6 +10,10 @@ const utils = {
 
   getImageUrl(id) {
     return '/api/images/data/' + id
+  },
+
+  removeHtml(string) {
+    return string.replace(/<(.|\n)*?>/g, '')
   }
 }
 
