@@ -1,9 +1,33 @@
 export const state = () => ({
   list: [],
-  post: null
+  post: null,
+  page: null,
+  count: 0
 })
 
 export const actions = {
+  async getListLast({ commit }, page) {
+    await this.$axios
+      .get('posts/last/' + page)
+      .then((res) => {
+        if (res.status === 200) {
+          commit('setListLast', {
+            data: res.data,
+            page: page
+          })
+        } else {
+          commit('setListLast', null)
+          throw new Error(
+            'Erro ao buscar postagens! (status ' + res.status + ')'
+          )
+        }
+      })
+      .catch((e) => {
+        /* eslint-disable no-console */
+        console.log(e)
+        /* eslint-enable no-console */
+      })
+  },
   async getListByCategory({ commit }, { categoryId, page }) {
     await this.$axios
       .get(`posts/category/${categoryId}/${page}`)
@@ -179,5 +203,16 @@ export const mutations = {
   },
   setPost(state, post) {
     state.post = post
+  },
+  setListLast(state, { data, page }) {
+    state.count = data.count
+    if (page > 1) {
+      state.list.push(data.post)
+    } else {
+      state.list = data.post
+    }
+  },
+  setPage(state, page) {
+    state.page = page
   }
 }

@@ -82,6 +82,43 @@ module.exports.selectByCategory = function(app, req, res) {
     })
 }
 
+module.exports.selectLast = function(app, req, res) {
+  const perPage = 5;
+  let page = Math.max(0, req.params.page) -1
+  let json = {}
+  app.server.models.post
+    .find({ deleted: false, published: true })
+    .populate('categories')
+    .populate('coverImage', 'name _id uploadDate')
+    .populate('images', 'name _id uploadDate')
+    .populate('createdBy', 'name _id userName')
+    .populate('logs.user', 'name _id userName')
+    .limit(perPage)
+    .skip(perPage * page)
+    .sort({
+      creationDate: 'asc'
+    })
+    .exec(function (err, post) {
+      if (err) {
+        res.status(400).json(err)
+      } else {
+        if (post) {
+          app.server.models.post.countDocuments({ deleted: false, published: true }, function(err, count) {
+            if (err) {
+              res.status(400).json(err)
+            } else {
+              json.post = post
+              json.count = count
+              res.json(json)
+            }
+          })
+        } else {
+          res.json(post)
+        }
+      }
+    })
+}
+
 module.exports.insert = function(app, req, res) {
   const Post = app.server.models.post
   const post = new Post(req.body)

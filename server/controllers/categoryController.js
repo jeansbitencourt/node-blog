@@ -29,7 +29,11 @@ module.exports.selectBySlug = function(app, req, res) {
         res.status(400).json(err)
       } else {
         if (category) {
-          app.server.models.post.countDocuments({ categories: category.id }, function(err, count) {
+          app.server.models.post.countDocuments({ 
+            categories: category.id,
+            deleted: false,
+            published: true 
+          }, function(err, count) {
             if (err) {
               res.status(400).json(err)
             } else {

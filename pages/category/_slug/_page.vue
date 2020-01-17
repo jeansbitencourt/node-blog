@@ -2,7 +2,7 @@
   <v-layout v-if="category" grid-list-md text-center>
     <v-container>
       <PostSummary v-for="(post, i) in postList" :key="i" :post="postList[i]" />
-      <v-row v-if="postList.length === 0">
+      <v-row v-if="!postList || postList.length === 0">
         <v-col cols="12" align="center">
           <span>Não há postagens nessa categoria!</span>
           <v-img
