@@ -74,10 +74,10 @@
   color: #fff;
 }
 .menu-item i.v-icon {
-  transition: all 1s;
+  transition: all 1.2s;
 }
 .menu-item:hover i.v-icon {
-  transform: rotate(360deg);
+  transform: rotate(360deg) scale(1.5);
 }
 .blog-title {
   font-family: 'Audiowide', cursive;

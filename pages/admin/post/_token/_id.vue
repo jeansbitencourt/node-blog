@@ -101,6 +101,57 @@
             </v-layout>
           </v-col>
         </v-row>
+        <v-row>
+          <v-col cols="12">
+            <pre class="prettyprint lang-html">
+            Para utilizar um código em destaque como esse, utilize uma tag html <i>pre</i>
+            com a classe <i>prettyprint</i> seguida de <i>lang-*</i>
+            A classe <i>lang-*</i> especifica a extenção da linguagem utilizada.
+            As extenções suportadas são:
+              "bsh", "c", "cc", "cpp", "cs", "csh", "cyc", "cv", "htm", "html", "java",
+              "js", "m", "mxml", "perl", "pl", "pm", "py", "rb", "sh", "xhtml", "xml",
+              "xsl".
+            <br />
+            Exemplo:
+            &lt;pre class=&quot;prettyprint lang-html&quot;&gt; ... &lt;/pre&gt;
+            </pre>
+          </v-col>
+        </v-row>
+        <v-row v-if="getPost">
+          <v-col cols="12">
+            <h4 class="pb-2">Logs da postagem:</h4>
+            <v-simple-table dense fixed-header>
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th class="text-left">
+                      Data
+                    </th>
+                    <th class="text-left">
+                      Usuário
+                    </th>
+                    <th class="text-left">
+                      Ação
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(log, i) in getPost.logs" :key="i">
+                    <td>
+                      {{ dateToStr(log.date) }}
+                    </td>
+                    <td>
+                      {{ log.user.userName }}
+                    </td>
+                    <td>
+                      {{ log.action }}
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-col>
+        </v-row>
       </v-card>
       <v-dialog v-model="showImgModal" max-width="800px">
         <v-card>
@@ -196,6 +247,7 @@ export default {
     if (this.id) {
       this.$store.dispatch('post/getPost', this.id).then(() => {
         this.getPostData()
+        console.log(this.getPost)
       })
     }
   },
@@ -326,6 +378,10 @@ export default {
 
     getImageUrl(id) {
       return utils.getImageUrl(id)
+    },
+
+    dateToStr(date) {
+      return utils.dateToStr(date)
     }
   }
 }

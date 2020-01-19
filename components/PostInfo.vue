@@ -27,7 +27,7 @@
   </v-row>
 </template>
 
-<style scoped>
+<style>
 .dotted {
   text-decoration: underline;
   text-decoration-style: dotted;

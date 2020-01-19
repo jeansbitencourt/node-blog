@@ -207,7 +207,9 @@ export const mutations = {
   setListLast(state, { data, page }) {
     state.count = data.count
     if (page > 1) {
-      state.list.push(data.post)
+      data.post.forEach((post) => {
+        state.list.push(post)
+      })
     } else {
       state.list = data.post
     }

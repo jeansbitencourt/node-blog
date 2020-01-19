@@ -25,9 +25,22 @@
               <v-btn
                 color="secondary"
                 class="mb-2 mr-4"
-                v-if="user.permissions && user.permissions.isAdmin"
+                v-show="
+                  user.permissions && user.permissions.isAdmin && !showDeleted
+                "
+                @click="showDeletedPosts(true)"
               >
                 Ver postagens excluídas
+              </v-btn>
+              <v-btn
+                color="secondary"
+                class="mb-2 mr-4"
+                v-show="
+                  user.permissions && user.permissions.isAdmin && showDeleted
+                "
+                @click="showDeletedPosts(false)"
+              >
+                Ver postagens não excluídas
               </v-btn>
             </template>
           </v-dialog>
@@ -126,12 +139,26 @@ export default {
           value: 'action',
           sortable: false
         }
-      ]
+      ],
+      showDeleted: false
     }
   },
   computed: {
     items() {
-      return this.$store.state.post.list
+      const storeList = this.$store.state.post.list
+      if (this.user.permissions && this.user.permissions.isAdmin) {
+        const modifiedList = []
+        storeList.forEach((item) => {
+          if (this.showDeleted && item.deleted) {
+            modifiedList.push(item)
+          }
+          if (!this.showDeleted && !item.deleted) {
+            modifiedList.push(item)
+          }
+        })
+        return modifiedList
+      }
+      return storeList
     },
     userToken() {
       return this.$store.state.login.userToken
@@ -167,6 +194,15 @@ export default {
 
     dateToStr(date) {
       return utils.dateToStr(date)
+    },
+
+    showDeletedPosts(show) {
+      this.showDeleted = show
+      if (show) {
+        this.pageTitle = 'Lista de postagens excluídas'
+      } else {
+        this.pageTitle = 'Lista de postagens'
+      }
     }
   }
 }

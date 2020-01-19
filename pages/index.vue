@@ -68,7 +68,10 @@ export default {
       }
     },
     addPage() {
-      this.page++
+      if (this.count < this.page) {
+        this.page++
+        this.$store.dispatch('post/getListLast', this.page)
+      }
     }
   }
 }

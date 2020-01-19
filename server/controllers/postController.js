@@ -6,20 +6,29 @@ newLog = function(user, action) {
 }
 
 module.exports.list = function(app, req, res) {
-  app.server.models.post
-    .find({})
-    .populate('categories')
-    .populate('coverImage', 'name _id uploadDate')
-    .populate('images', 'name _id uploadDate')
-    .populate('createdBy', 'name _id userName')
-    .populate('logs.user', 'name _id userName')
-    .exec(function(err, posts) {
-      if (err) {
-        res.status(400).json(err)
-      } else {
-        res.json(posts)
-      }
-    })
+  app.server.models.user.findById(req.body.userId, function (err, user) {
+    if (err) res.status(400).json(err)
+    let find = {
+      deleted: false
+    }
+    if (user && (user.permissions.isAdmin)){
+      find = {}
+    }
+    app.server.models.post
+      .find(find)
+      .populate('categories')
+      .populate('coverImage', 'name _id uploadDate')
+      .populate('images', 'name _id uploadDate')
+      .populate('createdBy', 'name _id userName')
+      .populate('logs.user', 'name _id userName')
+      .exec(function(err, posts) {
+        if (err) {
+          res.status(400).json(err)
+        } else {
+          res.json(posts)
+        }
+      })
+  })
 }
 
 module.exports.select = function(app, req, res) {

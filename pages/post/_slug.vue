@@ -12,9 +12,7 @@
     </v-row>
     <PostInfo :post="post" />
     <v-row justify="center">
-      <v-col cols="12" sm="10" md="8">
-        <p v-html="post.text" />
-      </v-col>
+      <v-col cols="12" sm="10" md="8" v-html="post.text" />
     </v-row>
     <PostEnd :post="post" />
   </v-container>

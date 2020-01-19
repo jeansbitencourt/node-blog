@@ -187,6 +187,11 @@ export default {
       } else {
         title.classList.add('black--text')
         title.classList.remove('white--text')
+        const style = document.createElement('style')
+        style.type = 'text/css'
+        style.innerHTML =
+          'pre.prettyprint, code.prettyprint { color: #fff !important; }'
+        document.getElementsByTagName('head')[0].appendChild(style)
       }
     }
   }

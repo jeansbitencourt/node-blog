@@ -3,6 +3,7 @@
     <v-col cols="12 wow fadeInUp" data-wow-duration="500ms">
       <v-card class="mx-auto" :loading="loading">
         <v-img
+          v-if="post.coverImage"
           :aspect-ratio="16 / 4"
           :alt="post.title"
           :src="getImageUrl(post.coverImage._id)"
