@@ -167,6 +167,7 @@ module.exports.update = function(app, req, res) {
         newPost.logs = post.logs
         newPost.logs.push(newLog(user, 'Edição da postagem'))
         newPost.updateDate = new Date()
+        newPost.deleted = false
         app.server.models.post
           .findOneAndUpdate({ _id: req.body._id }, newPost, { new: true })
           .populate('categories')

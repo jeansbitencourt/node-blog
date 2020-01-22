@@ -20,8 +20,8 @@
           </v-card-title>
         </v-img>
         <PostInfo :post="post" />
-        <v-card-text class="text--primary text-justify">
-          {{ summary(post.text) }}
+        <v-card-text class="text--primary text-justify text">
+          <p v-html="summary(post.text)"></p>
         </v-card-text>
         <PostEnd :post="post" class="pb-5" />
         <v-btn
@@ -91,7 +91,7 @@ export default {
       return utils.removeHtml(value)
     },
     summary(text) {
-      const limit = 300
+      const limit = 1000
       let textNoHtml = this.removeHtml(text)
       if (textNoHtml.length > limit) {
         textNoHtml = textNoHtml.substr(0, limit) + '...'

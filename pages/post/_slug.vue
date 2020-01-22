@@ -12,15 +12,18 @@
     </v-row>
     <PostInfo :post="post" />
     <v-row justify="center">
-      <v-col cols="12" sm="10" md="8" v-html="post.text" />
+      <v-col cols="12" sm="10" md="8" v-html="post.text" class="text" />
     </v-row>
     <PostEnd :post="post" />
   </v-container>
 </template>
 
-<style scoped>
+<style>
 img.cover {
   width: 100%;
+}
+.text p::before {
+  content: '\00a0\00a0\00a0\00a0';
 }
 </style>
 
