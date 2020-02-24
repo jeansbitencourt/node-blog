@@ -53,6 +53,7 @@ module.exports.selectBySlug = function(app, req, res) {
   const slug = req.params.slug
   app.server.models.post
     .findOne({slug: slug, deleted: false, published: true})
+    .select(["-logs"])
     .populate('categories')
     .populate('coverImage', 'name _id uploadDate')
     .populate('images', 'name _id uploadDate')
@@ -72,11 +73,11 @@ module.exports.selectByCategory = function(app, req, res) {
   const categoryId = req.params.categoryId
   app.server.models.post
     .find({ categories: categoryId, deleted: false, published: true })
+    .select(["-logs"])
     .populate('categories')
     .populate('coverImage', 'name _id uploadDate')
     .populate('images', 'name _id uploadDate')
     .populate('createdBy', 'name _id userName')
-    .populate('logs.user', 'name _id userName')
     .limit(perPage)
     .skip(perPage * page)
     .sort({
@@ -97,11 +98,11 @@ module.exports.selectLast = function(app, req, res) {
   let json = {}
   app.server.models.post
     .find({ deleted: false, published: true })
+    .select(["-logs"])
     .populate('categories')
     .populate('coverImage', 'name _id uploadDate')
     .populate('images', 'name _id uploadDate')
     .populate('createdBy', 'name _id userName')
-    .populate('logs.user', 'name _id userName')
     .limit(perPage)
     .skip(perPage * page)
     .sort({

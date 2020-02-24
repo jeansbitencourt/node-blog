@@ -39,12 +39,10 @@
         />
       </nuxt-link>
       <v-spacer />
-      <SearchBar v-if="searchTopBar" />
-      <v-btn
-        icon
-        style="margin-left:3em"
-        @click.stop="rightDrawer = !rightDrawer"
-      >
+      <v-btn icon>
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>menu</v-icon>
       </v-btn>
     </v-app-bar>
@@ -86,11 +84,13 @@
 .wow {
   visibility: hidden;
 }
+.text p::before {
+  content: '\00a0\00a0\00a0\00a0';
+}
 </style>
 
 <script>
 import RightBar from '~/components/RightBar.vue'
-import SearchBar from '~/components/SearchBar.vue'
 function isMobile() {
   return (
     typeof window.orientation !== 'undefined' ||
@@ -99,14 +99,12 @@ function isMobile() {
 }
 export default {
   components: {
-    RightBar,
-    SearchBar
+    RightBar
   },
   data() {
     return {
       clipped: true,
       drawer: true,
-      searchTopBar: true,
       miniVariant: false,
       rightDrawer: false,
       blogName: this.$store.state.blogName,
@@ -139,7 +137,6 @@ export default {
     changeToMobile() {
       if (process.client && isMobile()) {
         this.drawer = false
-        this.searchTopBar = false
       }
     }
   },

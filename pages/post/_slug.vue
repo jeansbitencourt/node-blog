@@ -18,12 +18,9 @@
   </v-container>
 </template>
 
-<style>
+<style scoped>
 img.cover {
   width: 100%;
-}
-.text p::before {
-  content: '\00a0\00a0\00a0\00a0';
 }
 </style>
 

@@ -71,8 +71,8 @@
       <v-switch
         class="bottom"
         @change="changeTheme"
-        :v-model="blackTheme"
-        label="Tema escuro"
+        v-model="theme"
+        label="Tema branco"
         inset
         color="primary"
         input-value="true"
@@ -98,8 +98,7 @@ export default {
   data() {
     return {
       username: '',
-      password: '',
-      blackTheme: true
+      password: ''
     }
   },
   computed: {
@@ -118,9 +117,18 @@ export default {
       set(value) {
         this.$store.commit('login/setLoginError', null)
       }
+    },
+    theme: {
+      get() {
+        return this.$cookies ? this.$cookies.whiteTheme === 'true' : false
+      },
+      set(value) {
+        this.$setCookie('whiteTheme', value, { expires: 365 })
+      }
     }
   },
   mounted() {
+    this.changeTheme()
     const loginParams = window.location.search.split('logout=')
     if (loginParams[1]) {
       Swal.fire({
@@ -176,12 +184,11 @@ export default {
       this.username = this.username ? this.username.toLowerCase() : null
     },
     changeTheme() {
-      this.blackTheme = !this.blackTheme
-      this.$vuetify.theme.dark = this.blackTheme
+      this.$vuetify.theme.dark = !this.theme
 
       const title = document.getElementsByClassName('blog-title')[0]
 
-      if (this.blackTheme) {
+      if (!this.theme) {
         title.classList.add('white--text')
         title.classList.remove('black--text')
       } else {

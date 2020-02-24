@@ -1,6 +1,6 @@
 <template>
-  <v-row>
-    <v-col cols="12 wow fadeInUp" data-wow-duration="500ms">
+  <v-row justify="center">
+    <v-col cols="12 wow fadeInUp" data-wow-duration="500ms" xl="6">
       <v-card class="mx-auto" :loading="loading">
         <v-img
           v-if="post.coverImage"
@@ -91,7 +91,7 @@ export default {
       return utils.removeHtml(value)
     },
     summary(text) {
-      const limit = 1000
+      const limit = 600
       let textNoHtml = this.removeHtml(text)
       if (textNoHtml.length > limit) {
         textNoHtml = textNoHtml.substr(0, limit) + '...'
